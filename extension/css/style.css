@@ -116,7 +116,7 @@ footer{
     justify-content: center;
 }
 
-.content img{
+.content .hand-stop{
     display: flex;
     justify-self: center;
     margin-top: 45px ;
@@ -132,11 +132,77 @@ footer{
     position: absolute;
     margin: calc(117px - 43px) 28px;
     font-size: 16px;
-
 }    
 
 
+#not-suppported{
+    display: none;
+}
 
+/*Banner web suppoted*/
+.web-supported-banner{
+    position: absolute;
+    left: calc(50% - 300px/2);
+    top: 0px;
+    height: 30px;
+    width: 300px;
+    display: flex;
+    justify-content: center;
+}
+
+.novel-title{
+    top: 30px;
+    height: 60px;
+    width: 300px;
+    position: absolute;
+    padding-top: 20px;
+    padding-left: 10px;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+
+.chapter-info{
+    position: absolute;
+    top: 90px;
+    height: 30px;
+    width: 300px;
+    padding-left: 10px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+#available-chapter{
+    color: #128C7E;
+    font-weight: 600;
+}
+
+.from-title {
+    height: 30px;
+    width: 300px;
+    top: 120px;
+    position: absolute;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+}
+.from{
+    top: 150px;
+    height: 200px;
+    width: 300px;
+    position: absolute;
+    justify-items: center;
+    overflow: hidden;
+
+}
+.element{
+    height: 30px;
+    width: 250px;
+    padding: 5px 0px;
+    font-size: 16px;
+    display: flex;
+}
 
 
 

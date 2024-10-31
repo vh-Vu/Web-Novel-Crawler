@@ -55,7 +55,6 @@ header{
 
 }
 
-
 /* Web Novel Crawler */
 .web-novel-crawler{
     font-size: 24px;
@@ -111,7 +110,31 @@ footer{
     left: 0px;
     top: 77px;
 }
-    
+
+.content{
+    display: block;
+    justify-content: center;
+}
+
+.content img{
+    display: flex;
+    justify-self: center;
+    margin-top: 45px ;
+}
+
+.content .message{
+    display: block;
+    align-self: center;
+    justify-self: center;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    position: absolute;
+    margin: calc(117px - 43px) 28px;
+    font-size: 16px;
+
+}    
+
 
 
 

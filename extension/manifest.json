@@ -1,10 +1,24 @@
 {
+    "author": "Vu Huynh",
     "manifest_version": 3,
     "name": "Web Novel Crawler",
-    "description": "Base Level Extension",
+    "description": "Tạo ebook từ web truyện. Get ebook from website",
     "version": "1.0",
+    "permissions": ["activeTab"],
     "action": {
-      "default_popup": "main.html",
-      "default_icon": "webnovelcrawler.png"
-    }
-  }
+        "default_icon": "img/icon64.png",
+        "default_title": "Web Novel Crawler",
+        "default_popup": "main.html"
+    },
+    "icons": {
+        "16": "img/icon16.png",
+        "64": "img/icon64.png",
+        "128": "img/icon128.png"
+    },
+    "content_scripts": [
+        {
+            "css": ["css/style.css"],
+            "matches": ["https://www.studocu.com/*", "https://www.studeersnel.nl/*"]
+        }
+    ]
+}

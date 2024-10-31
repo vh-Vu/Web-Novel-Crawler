@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // console.log(currentTab)
                 // console.log(currentTab.title)
                 //getNovelTitle(currentTab.title);
+                //localStorage.setItem("novel","hello storge")
                 break;
             }
         }

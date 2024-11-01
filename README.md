@@ -14,12 +14,16 @@ Dự án phục vụ nhu cầu chuyển đổi từ web truyện online sang ebo
 
 
 ## Hướng dãn kỹ thuật
-### Lưu ý: Extendtion hiện tại chỉ hoạt động trên Google Chrome
-1. Mở Google Chrome .
-2. Trên URL đi đến ```chrome://extensions/``` .
-3. Bật tính năng dành cho nhà phat triển "Developer mode", ở build *130.0.6723.70* thì nút bấm nằm phía bên tay phải phía trên 
+
+### Lưu ý: Extendtion hiện tại chỉ hoạt động trên Google Chrome và MS Edge
+1. Mở Google Chrome, hoặc Edge .
+2. Trên URL đi đến 
+    1. ```chrome://extensions/``` đối với chrome.
+    2. ```edge://extensions/``` đối với Edge.
+3. Bật tính năng dành cho nhà phat triển "Developer mode", ở build *130.0.6723.70* thì nút bấm nằm phía bên tay phải phía trên     
 ![devmode](https://i.ibb.co/N3DYNWC/devmode.png)
-4. Lúc này bên tay trái sẽ hiển thị lên mục Load Extension, tùy vào phiên bản bạn tải có thể chọn **Load cả thư mục** hoặc **Load file zip (Pack extension)**
-![Load Extension](https://i.ibb.co/VvBXmzb/load.png)
+4. Lúc này bên tay trái sẽ hiển thị lên mục Load Extension, tùy vào phiên bản bạn tải có thể chọn **Load cả thư mục** hoặc **Load file zip (Pack extension)**         
+![Load Extension](https://i.ibb.co/VvBXmzb/load.png)             
+Tương tự với Edge sẽ là ![Edge](https://i.ibb.co/7vxfQr2/edge.png)  
 5. Chọn đường dẫn đến thư mục, hoặc tập tin nén, sau khi load sẽ có một Plugin có tên là **Web Novel Crawler**.
 Chúc bạn thành công

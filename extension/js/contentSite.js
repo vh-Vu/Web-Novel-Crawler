@@ -40,6 +40,6 @@ refeshGetContent();
 
 //Send host and pathname to background
 function sendToWorker(){
-    chrome.runtime.sendMessage({ host: SUPPORTED_WEBSITE[host], content: location.pathname});
+    chrome.runtime.sendMessage({ action: "user=action", host: host, content: location.pathname});
 }
 

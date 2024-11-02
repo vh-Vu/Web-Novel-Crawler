@@ -4,7 +4,7 @@
     "name": "Web Novel Crawler",
     "description": "Tạo ebook từ web truyện. Get ebook from website",
     "version": "1.0",
-    "permissions":  ["tabs", "scripting","cookies"],
+    "permissions":  ["tabs", "scripting","cookies","storage"],
     "action": {
         "default_icon": "img/icon64.png",
         "default_title": "Web Novel Crawler",

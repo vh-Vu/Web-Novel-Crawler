@@ -7,57 +7,36 @@ const SUPPORTED_WEBSITE = {
     "bachngocsach.app": WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP};
 
 
-    chrome.runtime.sendMessage({ action: "getNameAndTotalChapter"}, (message) => {
-        if (message.error) {
-            document.getElementById("message").innerText = message.error;
-        } else {
-            document.getElementById("not-supported").style.display = "none";
-            document.getElementById("supported").style.display = "block";
-            document.getElementById("novel-title").innerText = message.name;
-            document.getElementById("total-chapter").innerText = message.totalChapter;
+chrome.runtime.sendMessage({ action: "getNameAndTotalChapter"}, (message) => {
+    if (message.error) {
+        document.getElementById("message").innerText = message.error;
+    } else {
+        document.getElementById("not-supported").style.display = "none";
+        document.getElementById("supported").style.display = "block";
+        document.getElementById("novel-title").innerText = message.name;
+        document.getElementById("total-chapter").innerText = message.totalChapter;
+        console.log(message.id)
+        if (message.id) { // Giả sử `id` là `storyId`
+            chrome.runtime.sendMessage({ action: "getFiveNewestChapters", storyId: message.id }, (response) => {
+                const container = document.getElementById("form");
+                const five = 5;
+                container.innerHTML = "";
+
+                if (response.error) {
+                    container.innerText = response.error;
+                } else {
+                    // Hiển thị danh sách 5 chương mới nhất
+                    for (let i = 0; i < five; i++) {
+                        let element = response[i];
+                        const div = document.createElement('div');
+                        div.textContent = element;
+                        div.classList.add("element");
+                        container.appendChild(div);
+                    }
+                }
+            });
         }
-    });
+    }
+});
+      
 
-// Lắng nghe tin nhắn từ background
-// chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-//     console.log("Tin nhắn nhận được từ background:", message);
-//     if (message.site) {
-//         // Hiển thị dữ liệu nhận được trong popup
-//         document.getElementById("not-supported").style.display = "none";
-//         document.getElementById("supported").style.display = "block";
-//         document.getElementById("novel-title").innerText = message.novelTitle;
-//         document.getElementById("total-chapter").innerText = message.totalChapter;
-//     }
-// });
-
-//let test;
-// document.addEventListener('DOMContentLoaded', function () {
-//     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-//         let currentTab = tabs[0];
-//         let currentUrl = currentTab.url;
-//         let message = document.getElementById("message"); 
-//         //Showing message when match with supported website 
-//         for (let website of SUPPORTED_WEBSITE){
-//             if(currentUrl.includes(website)){
-//                 message.innerHTML = currentUrl;
-//                 // test = currentUrl;
-//                 // console.log(currentTab)
-//                 // console.log(currentTab.title)
-//                 //getNovelTitle(currentTab.title);
-//                 //localStorage.setItem("novel","hello storge")
-//                 break;
-//             }
-//         }
-//     });
-// chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-//         if (message.action === "receiveH1Content") {
-//             console.log("Nội dung thẻ H1 nhận được:", message.content);
-//             document.getElementById("novel-title").innerText = message.content;
-//         }
-//     });
-// });
-
-// function getNovelTitle(tabId) {
-//     document.getElementById("title").innerText = tabId;
-
-// }

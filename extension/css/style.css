@@ -178,7 +178,7 @@ footer{
     font-weight: 600;
 }
 
-.from-title {
+.form-title {
     height: 30px;
     width: 300px;
     top: 120px;
@@ -187,7 +187,7 @@ footer{
     font-size: 20px;
     font-weight: 700;
 }
-.from{
+.form{
     top: 150px;
     height: 200px;
     width: 300px;

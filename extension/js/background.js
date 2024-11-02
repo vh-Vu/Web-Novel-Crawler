@@ -1,19 +1,12 @@
 importScripts('cookiesExtractor.js');
 importScripts('APIWorker.js');
-// importScripts('popup.js')
-// const WEBSITE_IDENTIFY = {
-//     BACH_NGOC_SACH_VIP : 1
-// };
-
-// const SUPPORTED_WEBSITE = {
-//     "bachngocsach.net.vn" : WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP,
-//     "bachngocsach.app": WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP};
 let host;
 let slug;
 
 
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.action === "user=action") {
+    if (message.action === "user-action") {
         console.log("host la", message.host);
         console.log("path la", message.content);
         let storageHost = chrome.storage.local.get("host");
@@ -29,12 +22,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     
 });
 
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "getNameAndTotalChapter") {
         (async () => {
             try {
-                const { name, totalChapter } = await getNovelInfo(slug);
-                sendResponse({ name, totalChapter });
+                sendResponse(await getNovelInfo(slug));
             } catch (error) {
                 console.error("Error fetching novel info:", error);
                 sendResponse({ error: error.message });
@@ -43,22 +36,22 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
         return true;
     }
+    
 });
 
 
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === "getFiveNewestChapters") {
+        (async () => {
+            try {
+                console.log("FUCK");
+                sendResponse(await getFiveNewestChapters(message.storyId));
+            } catch (error) {
+                console.error("Error fetching novel info:", error);
+                sendResponse({ error: error.message });
+            }
+        })();
+        return true;
+    }
+});
 
-
-/*
-Input: https://bachngocsach.net.vn/
-Output: null
-Input: https://bachngocsach.net.vn/truyen/ma-y-than-te
-Output: ma-y-than-te
-Input: https://bachngocsach.net.vn/truyen/ma-y-than-te/chuong-1278
-Output: ma-y-than-te
-*/
-function getSlug(pathName,path = "/truyen/"){
-    if(!pathName.includes(path)) return null;
-    let novelPath = pathName.slice(path.length);
-    let indexOfForwardSlash = novelPath.indexOf("/")
-    return  (indexOfForwardSlash === -1) ? novelPath: novelPath.slice(0,indexOfForwardSlash);
-}

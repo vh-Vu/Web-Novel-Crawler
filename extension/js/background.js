@@ -5,3 +5,5 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
        sendResponse({farewell: "goobye"});
     }
 });
+
+importScripts('cookiesExtractor.js');

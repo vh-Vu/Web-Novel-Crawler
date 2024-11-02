@@ -30,6 +30,6 @@
         "https://bachngocsach.app/*"]
     }
     ],"background": {
-        "service_worker": ["js/background.js","js/cookiesExtractor.js"]
+        "service_worker": "js/background.js"
     }
 }

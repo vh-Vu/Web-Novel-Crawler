@@ -1,4 +1,5 @@
 importScripts('cookiesExtractor.js');
+importScripts('APIWorker.js');
 // importScripts('popup.js')
 // const WEBSITE_IDENTIFY = {
 //     BACH_NGOC_SACH_VIP : 1

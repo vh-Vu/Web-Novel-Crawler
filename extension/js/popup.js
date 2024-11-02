@@ -39,4 +39,8 @@ chrome.runtime.sendMessage({ action: "getNameAndTotalChapter"}, (message) => {
     }
 });
       
-
+chrome.runtime.onMessage.addListener((message) => {
+    if (message.action === "reload") {
+        location.reload();
+    }
+});

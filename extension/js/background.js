@@ -9,6 +9,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         chrome.storage.local.set({"host":message.host});
         slug = getSlug(message.content);
         chrome.storage.local.set({ slug: slug });
+        chrome.runtime.sendMessage({action: "reload"});
 }});
 
 

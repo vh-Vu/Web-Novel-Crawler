@@ -27,7 +27,8 @@
        "js": ["js/contentSite.js"],
       "matches": [
         "https://bachngocsach.net.vn/*",  
-        "https://bachngocsach.app/*"]
+        "https://bachngocsach.app/*",
+        "https://voz.vn/*"]
     }
     ],"background": {
         "service_worker": "js/background.js"

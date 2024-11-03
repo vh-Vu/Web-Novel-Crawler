@@ -39,22 +39,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     
 });
 
-
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.action === "getFiveNewestChapters") {
-        (async () => {
-            try {
-                sendResponse(await getFiveNewestChapters(message.storyId));
-            } catch (error) {
-                console.error("Error fetching novel info:", error);
-                sendResponse({ error: error.message });
-            }
-        })();
-        return true;
-    }
-});
-
-
 async function Approve(){
     const SUPPORTED_WEBSITE = {
         "bachngocsach.net.vn" : WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP,

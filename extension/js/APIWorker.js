@@ -1,3 +1,4 @@
+importScripts('novel.js');
 const WEB_API = "https://ngocsach.com/api/"
 const STORY_BY_SLUG = "story-by-slug/";
 const FIVE_NEWEST_CHAPTERS = "/5-chapters-newest";
@@ -9,15 +10,10 @@ async function getNovelInfo(slug){
         let response = await request.json();
         if(request.status===200 && response.id){
             const fiveNewestChapter = await getFiveNewestChapters(response.id)
-            return {
-                id: response.id,
-                name: response.name,
-                totalChapter: response.chapters_count,
-                fiveNewestChapter: fiveNewestChapter,
-                Approve: true
-            };
+            const novelInfo = new Novel(response,fiveNewestChapter)
+            return novelInfo;
         }else{
-            throw new Exception("Cannot get API form sever try it later")
+            throw new Error("Cannot get API from server, try it later.");
         }
     }catch{
         throw new Error("Vui lòng báo cho lập trình viên ở email dưới footer");
@@ -32,7 +28,7 @@ async function getFiveNewestChapters(storyId) {
             const fiveNewestChapter = response.data.map(element=> element.name);
             return fiveNewestChapter;
         }else{
-            throw new Exception("Cannot get API form sever try it later")
+            throw new Error("Cannot get API from server, try it later.");
         }
     }
     catch{

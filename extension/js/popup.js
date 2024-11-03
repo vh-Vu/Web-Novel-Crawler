@@ -17,19 +17,20 @@ function fetchToGetNovelInfo(){
         } else if(!message.Approve){
             SwitchSupportDiv(false);
         } 
-        else {
+        else 
+        {
             SwitchSupportDiv();
             if(message.name){
                 document.getElementById("novel-title").innerText = message.name;
                 document.getElementById("total-chapter").innerText = message.totalChapter;
+                changeDisplay("novel-info");
                 Show5Newsest(message.fiveNewestChapter);
             }else{
                 document.getElementById("form").innerText= CHOOSE_A_NOVEL;
                 changeDisplay("novel-info",NONE);
             }
-            }
-
-        });}
+        }
+});}
 
 //First clicking on extention icon
 fetchToGetNovelInfo();
@@ -52,7 +53,6 @@ function SwitchSupportDiv(condition = true){
 }
 
 function Show5Newsest(arr){
-    changeDisplay("novel-info");
     const container = document.getElementById("form");
     const five = 5;
     container.innerHTML = "";

@@ -22,15 +22,7 @@
     "content_security_policy": {
         "extension_pages": "script-src 'self'; object-src 'self'; connect-src https://ngocsach.com https://bachngocsach.net.vn"
     },
-    "content_scripts": [
-    {
-       "js": ["js/contentSite.js"],
-      "matches": [
-        "https://bachngocsach.net.vn/*",  
-        "https://bachngocsach.app/*",
-        "https://voz.vn/*"]
-    }
-    ],"background": {
+    "background": {
         "service_worker": "js/background.js"
     }
 }

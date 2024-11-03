@@ -1,30 +1,27 @@
 importScripts('cookiesExtractor.js');
 importScripts('APIWorker.js');
 importScripts('extentionTool.js');
+importScripts('BachNgocSachVIPCollecter.js');
+const WEBSITE_IDENTIFY = {
+    BACH_NGOC_SACH_VIP : 1
+}
 
-
-
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.action === "user-action") {
-        console.log(message.host);
-        chrome.storage.local.set({"host":message.host});
-        slug = getSlug(message.content);
-        chrome.storage.local.set({ slug: slug });
-        chrome.runtime.sendMessage({action: "reload"});
-}});
+const SUPPORTED_WEBSITE = {
+    "bachngocsach.net.vn" : WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP,
+    "bachngocsach.app": WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP}
 
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "getNameAndTotalChapter" ) {
         (async () => {
             try {
-                if(await Approve()){
-                    slug = await chrome.storage.local.get("slug");
-                    if(slug.slug===null){
-                        sendResponse({Approve:true})
+                const { host, pathName } = await getCurrentTabUrl();
+                if(Approve(host)){
+                    switch(SUPPORTED_WEBSITE[host]){
+                        case 1:
+                        sendResponse(await BNSVIPgetNameAndTotalChapter(pathName));
+                        break;
                     }
-                    else
-                    sendResponse(await getNovelInfo(slug.slug));
                 }else{
                     sendResponse({Approve:false})
                 }
@@ -39,14 +36,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     
 });
 
-async function Approve(){
-    const SUPPORTED_WEBSITE = {
-        "bachngocsach.net.vn" : WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP,
-        "bachngocsach.app": WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP};
-    //let host = getCurrentTabUrl();
-    console.log("hello");
-    const host = await getCurrentTabUrl();
-    console.log("Host:", host);
+
+
+function Approve(host){
     return host in SUPPORTED_WEBSITE;
 }
 
@@ -63,7 +55,10 @@ function getCurrentTabUrl() {
 
                 if (url) {
                     const urlObject = new URL(url); // Tạo một đối tượng URL
-                    resolve(urlObject.host); // Trả về host
+                    resolve({ // Sử dụng resolve thay vì return
+                        host: urlObject.host,
+                        pathName: urlObject.pathname
+                    }); // Trả về host
                 } else {
                     reject(new Error("No URL found for the current tab."));
                 }

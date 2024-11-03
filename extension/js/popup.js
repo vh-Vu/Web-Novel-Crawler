@@ -17,7 +17,7 @@ function fetchToGetNovelInfo(){
         } else if(!message.Approve){
             SwitchSupportDiv(false);
         } 
-        else 
+        else if(message.Approve)
         {
             SwitchSupportDiv();
             if(message.name){
@@ -44,12 +44,12 @@ chrome.runtime.onMessage.addListener((message) => {
 
 
 function SwitchSupportDiv(condition = true){
+    changeDisplay("supported");
+    changeDisplay("not-supported",NONE);
     if(!condition){
         changeDisplay("not-supported");
         changeDisplay("supported",NONE);
     }
-    changeDisplay("supported");
-    changeDisplay("not-supported",NONE);
 }
 
 function Show5Newsest(arr){

@@ -1,11 +1,3 @@
-const WEBSITE_IDENTIFY = {
-    BACH_NGOC_SACH_VIP : 1
-}
-
-const SUPPORTED_WEBSITE = {
-    "bachngocsach.net.vn" : WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP,
-    "bachngocsach.app": WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP}
-
 
 /*
 Input: https://bachngocsach.net.vn/

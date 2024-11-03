@@ -14,3 +14,4 @@
 ## Update
 - Otc-31-24 (31-10-2024) Sau một cuộc trò truyện ngắn với đồng sự chúng tôi quyết định khởi động dự án, hơi nông nổi! Trong ngày đầu tôi đã thiết kế một giao diện, các bạn có thể tìm ở thư mục hình ảnh file V.1.0.
 - Nov-2-24 (02-11-2024) sau 02 ngày làm việc với js, các phương trình bất đồng bộ, các hàm hứa hẹn, các hàm nạc danh. Tôi đã gặp rắc rối khi đối mặt với cấu trúc mỗi một dòng lệnh cũng như cách các service giao tiếp. Ít nhất tôi cũng thu được cách để lấy cookies.
+- Nov-4-24 (04-11-2024) trước mắt tôi nghĩ nên xuất text (txt) metadata và cover, tôi chưa hình dung được thời gian parser 1k chương truyện trong bao lâu. Cũng như chưa hiểu làm sao để tạo thành một ebook hoàn chỉnh. Vào thời điểm hiện tại phần xử lí giao diện và thu thập thông tin đã khá tốt. Đã làm cho code dễ đọc hơn, hy vọng cách phân chia của tôi là chính xác.

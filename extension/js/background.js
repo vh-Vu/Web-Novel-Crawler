@@ -1,5 +1,4 @@
 importScripts('cookiesExtractor.js');
-importScripts('APIWorker.js');
 importScripts('extentionTool.js');
 importScripts('BachNgocSachVIPCollecter.js');
 const WEBSITE_IDENTIFY = {

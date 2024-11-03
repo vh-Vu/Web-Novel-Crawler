@@ -11,7 +11,8 @@ async function getNovelInfo(slug){
             return {
                 id: response.id,
                 name: response.name,
-                totalChapter: response.chapters_count
+                totalChapter: response.chapters_count,
+                Approve: true
             };
         }else{
             throw new Exception("Cannot get API form sever try it later")

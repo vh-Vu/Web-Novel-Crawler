@@ -1,4 +1,10 @@
+const WEBSITE_IDENTIFY = {
+    BACH_NGOC_SACH_VIP : 1
+}
 
+const SUPPORTED_WEBSITE = {
+    "bachngocsach.net.vn" : WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP,
+    "bachngocsach.app": WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP}
 
 
 /*
@@ -15,3 +21,4 @@ function getSlug(pathName,path = "/truyen/"){
     let indexOfForwardSlash = novelPath.indexOf("/")
     return  (indexOfForwardSlash === -1) ? novelPath: novelPath.slice(0,indexOfForwardSlash);
 }
+

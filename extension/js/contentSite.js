@@ -27,6 +27,7 @@ function weAreChecking(){
         sendToWorker();
         break;
     default:
+        sendToWorker();
         console.log("Not Supported");
     }
 }
@@ -40,6 +41,13 @@ refeshGetContent();
 
 //Send host and pathname to background
 function sendToWorker(){
+    console.log(host);
     chrome.runtime.sendMessage({ action: "user-action", host: host, content: location.pathname});
 }
 
+chrome.runtime.onMessage.addListener((message, sender, sendResponse)=> {
+    console.log("recives")
+    if(message.action === "getHost"){
+        sendResponse({host:location.host});
+    }
+});

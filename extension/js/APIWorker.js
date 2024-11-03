@@ -6,12 +6,14 @@ const FIVE_NEWEST_CHAPTERS = "/5-chapters-newest";
 async function getNovelInfo(slug){
     try{
         const request = await fetch(`${WEB_API}${STORY_BY_SLUG}${slug}`);
-        if(request.status===200){
-            let response = await request.json();
+        let response = await request.json();
+        if(request.status===200 && response.id){
+            const fiveNewestChapter = await getFiveNewestChapters(response.id)
             return {
                 id: response.id,
                 name: response.name,
                 totalChapter: response.chapters_count,
+                fiveNewestChapter: fiveNewestChapter,
                 Approve: true
             };
         }else{
@@ -24,14 +26,11 @@ async function getNovelInfo(slug){
 
 async function getFiveNewestChapters(storyId) {
     try{
-        console.log("hi am getFiveNewestChapters")
-        console.log(`${WEB_API}story/${storyId}${FIVE_NEWEST_CHAPTERS}`);
         const request = await fetch(`${WEB_API}story/${storyId}${FIVE_NEWEST_CHAPTERS}`);
         if(request.status===200){
             let response = await request.json();
-            let re = response.data.map(element=> element.name);
-            console.log(re);
-            return re;
+            const fiveNewestChapter = response.data.map(element=> element.name);
+            return fiveNewestChapter;
         }else{
             throw new Exception("Cannot get API form sever try it later")
         }

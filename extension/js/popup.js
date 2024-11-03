@@ -7,6 +7,8 @@ const SUPPORTED_WEBSITE = {
     "bachngocsach.app": WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP};
 
 const NONE = "none";
+const CHOOSE_A_NOVEL = "Mời bạn chọn truyện";
+const NOT_LOGIN = "Bạn chưa đăng nhập";
 
 function fetchToGetNovelInfo(){
         chrome.runtime.sendMessage({ action: "getNameAndTotalChapter"}, (message) => {
@@ -20,9 +22,9 @@ function fetchToGetNovelInfo(){
             if(message.name){
                 document.getElementById("novel-title").innerText = message.name;
                 document.getElementById("total-chapter").innerText = message.totalChapter;
-                showNovelInfo(message.id);
+                Show5Newsest(message.fiveNewestChapter);
             }else{
-                document.getElementById("form").innerText= "Mời bạn chọn truyện";
+                document.getElementById("form").innerText= CHOOSE_A_NOVEL;
                 changeDisplay("novel-info",NONE);
             }
             }
@@ -49,32 +51,21 @@ function SwitchSupportDiv(condition = true){
     changeDisplay("not-supported",NONE);
 }
 
-function showNovelInfo(id){
+function Show5Newsest(arr){
     changeDisplay("novel-info");
-    if (id) { // Giả sử `id` là `storyId`
-        chrome.runtime.sendMessage({ action: "getFiveNewestChapters", storyId: id }, (response) => {
-            const container = document.getElementById("form");
-            const five = 5;
-            container.innerHTML = "";
-            if (response.error) {
-            container.innerText = response.error;
-            } else {
-            for (let i = 0; i < five; i++) {
-            let element = response[i];
-            const div = document.createElement('div');
-            div.textContent = element;
-            div.classList.add("element");
-            container.appendChild(div);
-            }
-            }
-        });
+    const container = document.getElementById("form");
+    const five = 5;
+    container.innerHTML = "";
+    for (let i = 0; i < five; i++) 
+    {
+        let element = arr[i];
+        const div = document.createElement('div');
+        div.textContent = element;
+        div.classList.add("element");
+        container.appendChild(div);
     }
 }
 
-function SwitchNovelInfo(on=true){
-    document.getElementById("novel-info").style.display = "none";
-
-}
 
 function changeDisplay(id,state="block"){
     document.getElementById(id).style.display = state;

@@ -4,7 +4,7 @@
     "name": "Web Novel Crawler",
     "description": "Tạo ebook từ web truyện. Get ebook from website",
     "version": "1.0",
-    "permissions":  ["tabs", "scripting"],
+    "permissions":  ["tabs", "scripting","cookies","storage"],
     "action": {
         "default_icon": "img/icon64.png",
         "default_title": "Web Novel Crawler",
@@ -16,15 +16,13 @@
         "128": "img/icon128.png"
     },
     "host_permissions": [
-        "https://ngocsach.com/*"
+        "https://ngocsach.com/*",
+        "https://bachngocsach.net.vn/*"
     ],
     "content_security_policy": {
-        "extension_pages": "script-src 'self'; object-src 'self'; connect-src https://ngocsach.com"
+        "extension_pages": "script-src 'self'; object-src 'self'; connect-src https://ngocsach.com https://bachngocsach.net.vn"
     },
-    "content_scripts": [
-    {
-      "matches": ["https://bachngocsach.net.vn/*"],
-      "js": ["js/contentSite.js"]
+    "background": {
+        "service_worker": "js/background.js"
     }
-  ]
 }

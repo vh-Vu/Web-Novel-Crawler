@@ -1,9 +1,212 @@
-body {
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+:root{
     width: 300px;
     height: 520px; 
-    margin: 0;
-    padding: 10px;
     box-sizing: border-box;
     background-color: #EAEAEA;
+    font-family: 'Inter';
 }
+
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Header */
+header{
+    position: absolute;
+    width: 300px;
+    height: 75px;
+    left: 0px;
+    top: 0px;
+    
+}
+
+/* Icon face */
+.icon{
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    left: 10px;
+    top: calc(50% - 40px/2 + 0.5px);
+}
+
+.logo{
+    position: absolute;
+    width: 30.8px;
+    height: 40px;
+    left: 5px;
+    top: calc(50% - 40px/2 - 2px);
+}
+
+
+
+/* Extention name */
+.extension-name{
+    position: absolute;
+    width: 224px;
+    height: 75px;
+    right: 16px;
+    top: 0px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+
+}
+
+/* Web Novel Crawler */
+.web-novel-crawler{
+    font-size: 24px;
+    line-height: 24px;
+    text-align: center;
+    color: #464646;
+}
+
+/* Footer */
+footer{
+    position: absolute;
+    width: 300px;
+    height: 64px;
+    left: 0px;
+    bottom: 0px;
+    justify-content: center;
+    display: flex;
+}
+/*Button */
+.donate{
+    box-sizing: border-box;
+    width: 200px;
+    height: 35px;
+    border-radius: 6px;
+    border: 3px solid #7A949B;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #7A949B;
+    cursor: pointer;
+}
+.email{
+    position: absolute;
+    display: flex;
+    font-size: 16px;
+    font-weight: 100;
+    align-items: center;
+    text-align: center;
+    bottom: 0px;
+    text-decoration: none;
+    color: #636363;
+}
+
+
+    /* Body  content*/
+.body{ 
+    position: absolute;
+    width: 300px;
+    height: 365px;
+    left: 0px;
+    top: 77px;
+}
+
+.content{
+    display: block;
+    justify-content: center;
+}
+
+.content .hand-stop{
+    display: flex;
+    justify-self: center;
+    margin-top: 45px ;
+}
+
+.content .message{
+    display: block;
+    align-self: center;
+    justify-self: center;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    position: absolute;
+    margin: calc(117px - 43px) 28px;
+    font-size: 16px;
+}    
+
+
+#supported{
+    display: none;
+}
+
+/*Banner web suppoted*/
+.web-supported-banner{
+    position: absolute;
+    left: calc(50% - 300px/2);
+    top: 0px;
+    height: 30px;
+    width: 300px;
+    display: flex;
+    justify-content: center;
+}
+
+.novel-title{
+    top: 30px;
+    height: 60px;
+    width: 300px;
+    position: absolute;
+    padding-top: 20px;
+    padding-left: 10px;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+
+.chapter-info{
+    position: absolute;
+    top: 90px;
+    height: 30px;
+    width: 300px;
+    padding-left: 10px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+#available-chapter{
+    color: #128C7E;
+    font-weight: 600;
+}
+
+.form-title {
+    height: 30px;
+    width: 300px;
+    top: 120px;
+    position: absolute;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+}
+.form{
+    top: 150px;
+    height: 200px;
+    width: 300px;
+    position: absolute;
+    justify-items: center;
+    overflow: hidden;
+    font-weight: 600;
+    font-size: 20px;
+    text-align: center;
+}
+.element{
+    height: 30px;
+    width: 250px;
+    padding: 5px 0px;
+    font-size: 16px;
+    display: flex;
+    text-align: justify;
+    font-weight: 400;
+}
+
+
 

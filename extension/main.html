@@ -1,14 +1,72 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Web Novel Crawler</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <title>Web Novel Crawler</title>
+        <link rel="stylesheet" href="css/style.css">
+    </head>
     <body>
-        <h1 id="message">Website này không được hổ trợ</h1>
-        <h2 id="title"></h2>
-        <script src="js/popup.js"></script>
-        <div id="content"></div>
+        <!--header-->
+        <header>
+            <div class="icon">
+                <img class="logo" src="img/icon.svg">
+            </div>
+            <div class="extension-name">
+                <h1 class="web-novel-crawler">Web Novel Crawler</h1>
+                </div>
+        </header>
+        <!--Body content-->
+        <div class="body">
+            <div class="content" id="not-supported">
+                <img src="img/hand.svg" alt="hand stop" class="hand-stop">
+                <h2 class="message" id="message">Chúng tôi hiện tại không hổ trợ trang web này</h2>
+            </div>
+            <div class="content" id="supported">
+                <div class="web-supported-banner" id="banner">
+                    <img src="img/BachNgocSach.png" alt="Bach Ngoc Sach">
+                </div>
+                <div id="novel-info">
+                    <div class="novel-title" id="novel-title">
+                        [Dịch] Tu Tiên: Khi Ngươi Làm Một Việc Đến Cực Hạn
+                    </div>
+                    <div class="chapter-info">
+                        Số chương khả dụng:&nbsp;<span id="available-chapter">1000</span>/<span id="total-chapter">10000</span>
+                    </div>
+                </div>
+                <div class="form" id="form">
+                    <div class="element">
+                        Testing
+                    </div>
+                    <div class="element">
+                        Testing
+                    </div>
+                    <div class="element">
+                        Testing
+                    </div>
+                    <div class="element">
+                        Testing
+                    </div>
+                    <div class="element">
+                        Testing
+                    </div>
+                    <div class="element">
+                        Testing
+                    </div>
+                    <div class="element">
+                        Testing
+                    </div>
+                    <div class="element">
+                        Testing
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Footer-->
+        <footer>
+            <button class="donate">Ủng hộ tôi</button>
+            <a class="email" href="mailto:huynh-vu@outlook.com">huynh-vu@outlook.com</a>
+        </footer>
+            <script src="js/popup.js"></script>
+            <div id="content"></div>
     </body>
 </html>

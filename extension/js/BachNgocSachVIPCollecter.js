@@ -27,7 +27,6 @@ async function getNovelInfo(slug,token){
             if(token!==null){
                 chaptersToBuy = await getNumberChaptersHaveToBuy(token,response.id);
             }
-            console.log(chaptersToBuy);
             const novelInfo = new Novel(response,fiveNewestChapter,chaptersToBuy)
             return novelInfo;
         }else{

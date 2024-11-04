@@ -8,8 +8,7 @@ const CHAPTERS_HAVE_TO_BUY = "info-hasnt-bought-chapters/"
 
 //This one like Interface
 async function BNSVIPgetNameAndTotalChapter(pathname){
-    console.log(pathname);
-    let novelSlug = getSlug(pathname);
+    let novelSlug = getSlugNameorID(pathname);
     if (novelSlug === null) return {Approve : true}
     const token = await getTokenAccess();
     const dummy = await getNovelInfo(novelSlug,token);

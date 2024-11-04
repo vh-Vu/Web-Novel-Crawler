@@ -1,7 +1,7 @@
 
-chrome.cookies.getAll({ domain: "bachngocsach.net.vn" }, (cookies) => {
-    console.log("Cookies for bachngocsach.net.vn:", cookies);
-});
+// chrome.cookies.getAll({ domain: "bachngocsach.net.vn" }, (cookies) => {
+//     console.log("Cookies for bachngocsach.net.vn:", cookies);
+// });
 
 function getCookies(host) {
     return new Promise((resolve, reject) => {

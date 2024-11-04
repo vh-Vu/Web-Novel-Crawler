@@ -25,6 +25,8 @@ function fetchToGetNovelInfo(){
         if(message.name){
             document.getElementById("novel-title").innerText = message.name;
             document.getElementById("total-chapter").innerText = message.totalChapter;
+            console.log(message.availableChapter);
+            document.getElementById("available-chapter").innerText = message.availableChapter;
             changeDisplay("novel-info");
             Show5Newsest(message.fiveNewestChapter);
         }else{

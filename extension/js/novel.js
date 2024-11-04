@@ -1,9 +1,9 @@
 class Novel{
-    constructor(response, fiveNewestChapter) {
+    constructor(response, fiveNewestChapter,chaptersToBuy) {
         this.id = response.id;
         this.name = response.name;
-        //this.availableChapter 
         this.totalChapter = response.chapters_count;
+        this.availableChapter = this.totalChapter - chaptersToBuy;
         this.fiveNewestChapter = fiveNewestChapter;
         this.Approve = true;
     }

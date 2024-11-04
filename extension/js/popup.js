@@ -11,25 +11,27 @@ const CHOOSE_A_NOVEL = "Mời bạn chọn truyện";
 const NOT_LOGIN = "Bạn chưa đăng nhập";
 
 function fetchToGetNovelInfo(){
-        chrome.runtime.sendMessage({ action: "getNameAndTotalChapter"}, (message) => {
-        if (message.error) {
-            document.getElementById("message").innerText = message.error;
-        } else if(!message.Approve){
-            SwitchSupportDiv(false);
-        } 
-        else if(message.Approve)
-        {
-            SwitchSupportDiv();
-            if(message.name){
-                document.getElementById("novel-title").innerText = message.name;
-                document.getElementById("total-chapter").innerText = message.totalChapter;
-                changeDisplay("novel-info");
-                Show5Newsest(message.fiveNewestChapter);
-            }else{
-                document.getElementById("form").innerText= CHOOSE_A_NOVEL;
-                changeDisplay("novel-info",NONE);
-            }
+    changeDisplay("not-supported",NONE);
+    changeDisplay("supported",NONE);
+    chrome.runtime.sendMessage({ action: "getNameAndTotalChapter"}, (message) => {
+    if (message.error) {
+        document.getElementById("message").innerText = message.error;
+    } else if(!message.Approve){
+        SwitchSupportDiv(false);
+    } 
+    else if(message.Approve)
+    {
+        SwitchSupportDiv();
+        if(message.name){
+            document.getElementById("novel-title").innerText = message.name;
+            document.getElementById("total-chapter").innerText = message.totalChapter;
+            changeDisplay("novel-info");
+            Show5Newsest(message.fiveNewestChapter);
+        }else{
+            document.getElementById("form").innerText= CHOOSE_A_NOVEL;
+            changeDisplay("novel-info",NONE);
         }
+    }
 });}
 
 //First clicking on extention icon
@@ -45,10 +47,10 @@ chrome.runtime.onMessage.addListener((message) => {
 
 function SwitchSupportDiv(condition = true){
     changeDisplay("supported");
-    changeDisplay("not-supported",NONE);
+    //changeDisplay("not-supported",NONE);
     if(!condition){
         changeDisplay("not-supported");
-        changeDisplay("supported",NONE);
+        //changeDisplay("supported",NONE);
     }
 }
 

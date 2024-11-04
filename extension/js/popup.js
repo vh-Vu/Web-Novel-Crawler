@@ -25,6 +25,7 @@ function fetchToGetNovelInfo(){
         if(message.name){
             document.getElementById("novel-title").innerText = message.name;
             document.getElementById("total-chapter").innerText = message.totalChapter;
+            document.getElementById("author").innerText = message.author;
             document.getElementById("available-chapter").innerText = (message.availableChapter== message.totalChapter+1)? "Không rõ":message.availableChapter;
             changeDisplay("novel-info");
             Show5Newsest(message.fiveNewestChapter);
@@ -48,10 +49,10 @@ chrome.runtime.onMessage.addListener((message) => {
 
 function SwitchSupportDiv(condition = true){
     changeDisplay("supported");
-    //changeDisplay("not-supported",NONE);
+    changeDisplay("not-supported",NONE);
     if(!condition){
         changeDisplay("not-supported");
-        //changeDisplay("supported",NONE);
+        changeDisplay("supported",NONE);
     }
 }
 

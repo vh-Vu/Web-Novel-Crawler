@@ -44,3 +44,18 @@
 //     console.log(host);
 //     chrome.runtime.sendMessage({ action: "user-action", host: host, content: location.pathname});
 // }
+// Tìm phần tử có id="__NEXT_DATA__"
+const nextDataElement = document.getElementById("__NEXT_DATA__");
+
+if (nextDataElement) {
+    // Lấy nội dung bên trong phần tử
+    const nextDataContent = nextDataElement.textContent || nextDataElement.innerText;
+    
+    // Gửi nội dung về background script
+    chrome.runtime.sendMessage({
+        action: "PageData",
+        data: nextDataContent
+    });
+} else {
+    console.log("Không tìm thấy phần tử với id='__NEXT_DATA__'");
+}

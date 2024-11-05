@@ -89,6 +89,12 @@ footer{
     color: #7A949B;
     cursor: pointer;
 }
+
+.donate:hover{
+    color: #37889E;
+    border: 3px solid #37889E;
+}
+
 .email{
     position: absolute;
     display: flex;

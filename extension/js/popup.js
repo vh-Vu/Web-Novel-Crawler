@@ -10,9 +10,19 @@ const NONE = "none";
 const CHOOSE_A_NOVEL = "Mời bạn chọn truyện";
 const NOT_LOGIN = "Bạn chưa đăng nhập";
 
+const NOVEL_TITLE =  document.getElementById("novel-title");
+const TOTAL_CHAPTERS = document.getElementById("total-chapter");
+const AUTHOR = document.getElementById("author");
+const AVAILABLE_CHAPTERS = document.getElementById("available-chapter");
+const SUPPORTED_FRAME = document.getElementById("supported");
+const NOT_SUPPORTED_FRAME = document.getElementById("not-supported");
+const NOVEL_INFO_FRAME = document.getElementById("novel-info");
+
+
+
 function fetchToGetNovelInfo(){
-    changeDisplay("not-supported",NONE);
-    changeDisplay("supported",NONE);
+    changeDisplay(NOT_SUPPORTED_FRAME,NONE);
+    changeDisplay(SUPPORTED_FRAME,NONE);
     chrome.runtime.sendMessage({ action: "getNameAndTotalChapter"}, (message) => {
     if (message.error) {
         document.getElementById("message").innerText = message.error;
@@ -23,15 +33,15 @@ function fetchToGetNovelInfo(){
     {
         SwitchSupportDiv();
         if(message.name){
-            document.getElementById("novel-title").innerText = message.name;
-            document.getElementById("total-chapter").innerText = message.totalChapter;
-            document.getElementById("author").innerText = message.author;
-            document.getElementById("available-chapter").innerText = (message.availableChapter== message.totalChapter+1)? "Không rõ":message.availableChapter;
-            changeDisplay("novel-info");
+            NOVEL_TITLE.innerText = message.name;
+            TOTAL_CHAPTERS.innerText = message.totalChapter;
+            AUTHOR.innerText = message.author;
+            AVAILABLE_CHAPTERS.innerText = (message.availableChapter== message.totalChapter+1)? "Không rõ":message.availableChapter;
+            changeDisplay(NOVEL_INFO_FRAME);
             Show5Newsest(message.fiveNewestChapter);
         }else{
             document.getElementById("form").innerText= CHOOSE_A_NOVEL;
-            changeDisplay("novel-info",NONE);
+            changeDisplay(NOVEL_INFO_FRAME,NONE);
         }
     }
 });}
@@ -48,11 +58,11 @@ chrome.runtime.onMessage.addListener((message) => {
 
 
 function SwitchSupportDiv(condition = true){
-    changeDisplay("supported");
-    changeDisplay("not-supported",NONE);
+    changeDisplay(SUPPORTED_FRAME);
+    changeDisplay(NOT_SUPPORTED_FRAME,NONE);
     if(!condition){
-        changeDisplay("not-supported");
-        changeDisplay("supported",NONE);
+        changeDisplay(NOT_SUPPORTED_FRAME);
+        changeDisplay(SUPPORTED_FRAME,NONE);
     }
 }
 
@@ -71,6 +81,11 @@ function Show5Newsest(arr){
 }
 
 
-function changeDisplay(id,state="block"){
-    document.getElementById(id).style.display = state;
+function changeDisplay(frame,state="block"){
+    frame.style.display = state;
 }
+
+
+const Donate = document.getElementById("donate");
+Donate.addEventListener('click',() =>{
+})

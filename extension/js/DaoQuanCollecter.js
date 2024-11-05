@@ -1,5 +1,5 @@
 const storyPath = "/doc-truyen/";
-
+const img = "https://img.daoquan.vn/get/images/doctruyen/images/20220405/web.png"
 async function DaoQuangetNameAndTotalChapter(pathName){
     console.log(getSlugNameorID(pathName,storyPath,true));
 }

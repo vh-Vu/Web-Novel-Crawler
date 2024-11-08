@@ -9,8 +9,8 @@ const CHAPTERS_HAVE_TO_BUY = "info-hasnt-bought-chapters/"
 
 //This one like Interface
 async function BNSVIPgetNameAndTotalChapter(pathname){
-    let novelSlug = getSlugNameorID(pathname);
-    if (novelSlug === null) return {Approve : true}
+    let novelSlug = getSlug(pathname);
+    if (novelSlug === null) return {logo: BNS_LOGO,Approve : true}
     const token = await getTokenAccess();
     const dummy = await getNovelInfo(novelSlug,token);
     return dummy;
@@ -116,3 +116,23 @@ async function getTokenAccess(){
     }
     
 }
+
+
+
+/*
+Input: https://bachngocsach.net.vn/
+Output: null
+Input: https://bachngocsach.net.vn/truyen/ma-y-than-te
+Output: ma-y-than-te
+Input: https://bachngocsach.net.vn/truyen/ma-y-than-te/chuong-1278
+Output: ma-y-than-te
+*/
+
+
+function getSlug(pathName,storyPath = "/truyen/"){
+    if(!pathName.includes(storyPath)) return null;
+    const novelPath = pathName.slice(storyPath.length);
+    const indexOfForwardSlash = novelPath.indexOf("/");
+    return  (indexOfForwardSlash === -1) ? novelPath : novelPath.slice(0,indexOfForwardSlash);
+}
+

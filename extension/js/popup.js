@@ -33,8 +33,8 @@ function fetchToGetNovelInfo(){
     else if(message.Approve)
     {
         SwitchSupportDiv();
+        LOGO_WEBSERVICE_IMG.src = message.logo;
         if(message.name){
-            LOGO_WEBSERVICE_IMG.src = message.logo;
             NOVEL_TITLE.innerText = message.name;
             TOTAL_CHAPTERS.innerText = message.totalChapter;
             AUTHOR.innerText = message.author;

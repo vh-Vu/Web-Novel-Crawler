@@ -19,14 +19,8 @@
         "https://bachngocsach.net.vn/*",
         "https://daoquan.vn/*"
     ],
-    "content_scripts": [
-        {
-            "matches": ["https://daoquan.vn/*"],  
-            "js": ["js/contentSite.js"]  
-        }
-    ],
     "content_security_policy": {
-        "extension_pages": "script-src 'self'; object-src 'self'; connect-src https://ngocsach.com https://bachngocsach.net.vn https://daoquan.vn"
+        "extension_pages": "script-src 'self'; object-src 'self'; connect-src https://ngocsach.com https://bachngocsach.net.vn https://daoquan.vn https://api.daoquan.vn"
     },
     "background": {
         "service_worker": "js/background.js"

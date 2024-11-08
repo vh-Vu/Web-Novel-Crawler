@@ -22,11 +22,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 if(Approve(host)){
                     switch(SUPPORTED_WEBSITE[host]){
                         case 1:
-                        sendResponse(await BNSVIPgetNameAndTotalChapter(pathName));
+                            sendResponse(await BNSVIPgetNameAndTotalChapter(pathName));
                         break;
                         case 2:
-                            await DaoQuangetNameAndTotalChapter(pathName)
-                            break;
+                            sendResponse(await DaoQuangetNameAndTotalChapter(pathName));
+                        break;
                     }
                 }else{
                     sendResponse({Approve:false})

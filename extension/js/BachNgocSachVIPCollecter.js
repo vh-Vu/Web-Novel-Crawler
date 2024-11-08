@@ -1,4 +1,5 @@
 importScripts('novel.js');
+const BNS_LOGO = "../img/BachNgocSach.png";
 const BNS_API = "https://ngocsach.com/api/"
 const STORY_BY_SLUG = "story-by-slug/";
 const FIVE_NEWEST_CHAPTERS = "/5-chapters-newest";
@@ -26,7 +27,7 @@ async function getNovelInfo(slug,token){
             if(token!==null){
                 chaptersToBuy = await getNumberChaptersHaveToBuy(token,response.id);
             }
-            const novelInfo = new Novel(response,fiveNewestChapter,chaptersToBuy)
+            const novelInfo = new Novel(BNS_LOGO, response.name, response.author.name, response.chapters_count,fiveNewestChapter,chaptersToBuy)
             return novelInfo;
         }else{
             throw new Error("Cannot get API from server, try it later.");

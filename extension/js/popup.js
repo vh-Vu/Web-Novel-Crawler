@@ -17,6 +17,7 @@ const AVAILABLE_CHAPTERS = document.getElementById("available-chapter");
 const SUPPORTED_FRAME = document.getElementById("supported");
 const NOT_SUPPORTED_FRAME = document.getElementById("not-supported");
 const NOVEL_INFO_FRAME = document.getElementById("novel-info");
+const LOGO_WEBSERVICE_IMG = document.getElementById("banner");
 
 
 
@@ -33,6 +34,7 @@ function fetchToGetNovelInfo(){
     {
         SwitchSupportDiv();
         if(message.name){
+            LOGO_WEBSERVICE_IMG.src = message.logo;
             NOVEL_TITLE.innerText = message.name;
             TOTAL_CHAPTERS.innerText = message.totalChapter;
             AUTHOR.innerText = message.author;

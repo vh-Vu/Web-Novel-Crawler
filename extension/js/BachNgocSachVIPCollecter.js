@@ -75,33 +75,43 @@ async function getNumberChaptersHaveToBuy(token,id) {
 }
 
 async function getTokenAccess(){
-    const allCookies = await getCookies("bachngocsach.net.vn");
-    let __Host ={name: "__Host-next-auth.csrf-token",value:""};
-    let __Secure__CallBack = {name: "__Secure-next-auth.callback-url",value:""};
-    let __Secure__NextAuthen = {name: "__Secure-next-auth.session-token",value:""};;
-    for (let i = 0; i < allCookies.length; i++) {
-        if (allCookies[i].name === __Host.name) {
-            __Host.value = allCookies[i].value;
+    try{
+        const allCookies = await getCookies("bachngocsach.net.vn");
+        if(allCookies){
+            let __Host ={name: "__Host-next-auth.csrf-token",value:""};
+            let __Secure__CallBack = {name: "__Secure-next-auth.callback-url",value:""};
+            let __Secure__NextAuthen = {name: "__Secure-next-auth.session-token",value:""};;
+            for (let i = 0; i < allCookies.length; i++) {
+                if (allCookies[i].name === __Host.name) {
+                    __Host.value = allCookies[i].value;
+                }
+                if (allCookies[i].name === __Secure__CallBack.name) {
+                    __Secure__CallBack.value = allCookies[i].value;
+                }
+                if (allCookies[i].name === __Secure__NextAuthen.name) {
+                    __Secure__NextAuthen.value = allCookies[i].value;
+                }
+            }
+            if(__Secure__NextAuthen.value===""){
+                return null;
+            }
+            let cookie = __Host.name+"="+__Host.value+"; "+__Secure__CallBack.name+"="+__Secure__CallBack.value+"; "+__Secure__NextAuthen.name+"="+__Secure__NextAuthen.value
+            const response = await fetch(BNS_AUTHENTICATE, {
+                method: 'GET',
+                headers: {
+                    'Accept': '*/*',
+                    'Content-Type': 'application/json',
+                    'Cookie': cookie
+                }
+            });
+            const request = await response.json();
+            return request.accessToken;
         }
-        if (allCookies[i].name === __Secure__CallBack.name) {
-            __Secure__CallBack.value = allCookies[i].value;
-        }
-        if (allCookies[i].name === __Secure__NextAuthen.name) {
-            __Secure__NextAuthen.value = allCookies[i].value;
-        }
+        else
+            return null;
     }
-    if(__Secure__NextAuthen.value===""){
+    catch{
         return null;
     }
-    let cookie = __Host.name+"="+__Host.value+"; "+__Secure__CallBack.name+"="+__Secure__CallBack.value+"; "+__Secure__NextAuthen.name+"="+__Secure__NextAuthen.value
-    const response = await fetch(BNS_AUTHENTICATE, {
-        method: 'GET',
-        headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json',
-            'Cookie': cookie
-        }
-    });
-    const request = await response.json();
-    return request.accessToken;
+    
 }

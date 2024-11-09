@@ -2,7 +2,9 @@ const DQ_LOGO = "../img/DaoQuanLogo.png"
 const DQ_API = "https://api.daoquan.vn/web/c/";
 
 async function DaoQuangetNameAndTotalChapter(pathName){
-    return await DQGetNovelInfo(GetId(pathName));
+    const novelId =  GetId(pathName);
+    if (!novelId)    return {logo: DQ_LOGO, Approve : true};
+    return await DQGetNovelInfo(novelId);
 }
 
 
@@ -16,7 +18,8 @@ function GetId(pathName){
     const regex = /^\/([a-zA-Z0-9\-]+)\/(\d+)\/1\/chuong-(\d+)$/;
     const match = pathName.match(regex);
     if(match) return match[2];
-    return {logo: DQ_LOGO, Approve : true};
+    console.log("kiemtra")
+    return false;
 }
 
 async function DQGetNovelInfo(id) {
@@ -38,7 +41,7 @@ async function DQGetNovelInfo(id) {
                                         response.storyAuthors.name,
                                         response.countChapter,
                                         last5Chapter,
-                                        0)
+                                        0);
         return novelInfo;
     }
     catch{

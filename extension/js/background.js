@@ -17,7 +17,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "getNameAndTotalChapter" ) {
         (async () => {
             try {
-                const { host, pathName } = await getCurrentTabUrl();
+                // const timeoutPromise = new Promise((_, reject) =>
+                //     setTimeout(() => reject(new Error('Timeout: Unable to get the current tab URL within the time limit.')), 5000)
+                // );
+                const { host, pathName } =  await getCurrentTabUrl(); //Promise.race([getCurrentTabUrl(), timeoutPromise]);
                 if(Approve(host)){
                     switch(SUPPORTED_WEBSITE[host]){
                         case 1:

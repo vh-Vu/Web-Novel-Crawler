@@ -1,4 +1,5 @@
 importScripts('novel.js');
+const BNS_LOGO = "../img/BachNgocSach.png";
 const BNS_API = "https://ngocsach.com/api/"
 const STORY_BY_SLUG = "story-by-slug/";
 const FIVE_NEWEST_CHAPTERS = "/5-chapters-newest";
@@ -8,9 +9,8 @@ const CHAPTERS_HAVE_TO_BUY = "info-hasnt-bought-chapters/"
 
 //This one like Interface
 async function BNSVIPgetNameAndTotalChapter(pathname){
-    console.log(pathname);
     let novelSlug = getSlug(pathname);
-    if (novelSlug === null) return {Approve : true}
+    if (novelSlug === null) return {logo: BNS_LOGO,Approve : true}
     const token = await getTokenAccess();
     const dummy = await getNovelInfo(novelSlug,token);
     return dummy;
@@ -27,7 +27,7 @@ async function getNovelInfo(slug,token){
             if(token!==null){
                 chaptersToBuy = await getNumberChaptersHaveToBuy(token,response.id);
             }
-            const novelInfo = new Novel(response,fiveNewestChapter,chaptersToBuy)
+            const novelInfo = new Novel(BNS_LOGO, response.name, response.author.name, response.chapters_count,fiveNewestChapter,chaptersToBuy)
             return novelInfo;
         }else{
             throw new Error("Cannot get API from server, try it later.");
@@ -76,33 +76,63 @@ async function getNumberChaptersHaveToBuy(token,id) {
 }
 
 async function getTokenAccess(){
-    const allCookies = await getCookies("bachngocsach.net.vn");
-    let __Host ={name: "__Host-next-auth.csrf-token",value:""};
-    let __Secure__CallBack = {name: "__Secure-next-auth.callback-url",value:""};
-    let __Secure__NextAuthen = {name: "__Secure-next-auth.session-token",value:""};;
-    for (let i = 0; i < allCookies.length; i++) {
-        if (allCookies[i].name === __Host.name) {
-            __Host.value = allCookies[i].value;
+    try{
+        const allCookies = await getCookies("bachngocsach.net.vn");
+        if(allCookies){
+            let __Host ={name: "__Host-next-auth.csrf-token",value:""};
+            let __Secure__CallBack = {name: "__Secure-next-auth.callback-url",value:""};
+            let __Secure__NextAuthen = {name: "__Secure-next-auth.session-token",value:""};;
+            for (let i = 0; i < allCookies.length; i++) {
+                if (allCookies[i].name === __Host.name) {
+                    __Host.value = allCookies[i].value;
+                }
+                if (allCookies[i].name === __Secure__CallBack.name) {
+                    __Secure__CallBack.value = allCookies[i].value;
+                }
+                if (allCookies[i].name === __Secure__NextAuthen.name) {
+                    __Secure__NextAuthen.value = allCookies[i].value;
+                }
+            }
+            if(__Secure__NextAuthen.value===""){
+                return null;
+            }
+            let cookie = __Host.name+"="+__Host.value+"; "+__Secure__CallBack.name+"="+__Secure__CallBack.value+"; "+__Secure__NextAuthen.name+"="+__Secure__NextAuthen.value
+            const response = await fetch(BNS_AUTHENTICATE, {
+                method: 'GET',
+                headers: {
+                    'Accept': '*/*',
+                    'Content-Type': 'application/json',
+                    'Cookie': cookie
+                }
+            });
+            const request = await response.json();
+            return request.accessToken;
         }
-        if (allCookies[i].name === __Secure__CallBack.name) {
-            __Secure__CallBack.value = allCookies[i].value;
-        }
-        if (allCookies[i].name === __Secure__NextAuthen.name) {
-            __Secure__NextAuthen.value = allCookies[i].value;
-        }
+        else
+            return null;
     }
-    if(__Secure__NextAuthen.value===""){
+    catch{
         return null;
     }
-    let cookie = __Host.name+"="+__Host.value+"; "+__Secure__CallBack.name+"="+__Secure__CallBack.value+"; "+__Secure__NextAuthen.name+"="+__Secure__NextAuthen.value
-    const response = await fetch(BNS_AUTHENTICATE, {
-        method: 'GET',
-        headers: {
-            'Accept': '*/*',
-            'Content-Type': 'application/json',
-            'Cookie': cookie
-        }
-    });
-    const request = await response.json();
-    return request.accessToken;
+    
 }
+
+
+
+/*
+Input: https://bachngocsach.net.vn/
+Output: null
+Input: https://bachngocsach.net.vn/truyen/ma-y-than-te
+Output: ma-y-than-te
+Input: https://bachngocsach.net.vn/truyen/ma-y-than-te/chuong-1278
+Output: ma-y-than-te
+*/
+
+
+function getSlug(pathName,storyPath = "/truyen/"){
+    if(!pathName.includes(storyPath)) return null;
+    const novelPath = pathName.slice(storyPath.length);
+    const indexOfForwardSlash = novelPath.indexOf("/");
+    return  (indexOfForwardSlash === -1) ? novelPath : novelPath.slice(0,indexOfForwardSlash);
+}
+

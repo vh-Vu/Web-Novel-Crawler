@@ -89,6 +89,12 @@ footer{
     color: #7A949B;
     cursor: pointer;
 }
+
+.donate:hover{
+    color: #37889E;
+    border: 3px solid #37889E;
+}
+
 .email{
     position: absolute;
     display: flex;
@@ -162,9 +168,20 @@ footer{
 }
 
 
-.chapter-info{
+.author-info{
     position: absolute;
     top: 90px;
+    height: 30px;
+    width: 300px;
+    padding-left: 10px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.chapter-info{
+    position: absolute;
+    top: 120px;
     height: 30px;
     width: 300px;
     padding-left: 10px;
@@ -178,15 +195,6 @@ footer{
     font-weight: 600;
 }
 
-.form-title {
-    height: 30px;
-    width: 300px;
-    top: 120px;
-    position: absolute;
-    text-align: center;
-    font-size: 20px;
-    font-weight: 700;
-}
 .form{
     top: 150px;
     height: 200px;

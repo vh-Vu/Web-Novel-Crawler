@@ -18,6 +18,7 @@ const SUPPORTED_FRAME = document.getElementById("supported");
 const NOT_SUPPORTED_FRAME = document.getElementById("not-supported");
 const NOVEL_INFO_FRAME = document.getElementById("novel-info");
 const LOGO_WEBSERVICE_IMG = document.getElementById("banner");
+const LOADER = document.getElementById("waiting");
 
 
 
@@ -25,6 +26,7 @@ function fetchToGetNovelInfo(){
     changeDisplay(NOT_SUPPORTED_FRAME,NONE);
     changeDisplay(SUPPORTED_FRAME,NONE);
     chrome.runtime.sendMessage({ action: "getNameAndTotalChapter"}, (message) => {
+    changeDisplay(LOADER,NONE)
     if (message.error) {
         document.getElementById("message").innerText = message.error;
     } else if(!message.Approve){

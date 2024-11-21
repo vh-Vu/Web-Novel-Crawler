@@ -3,7 +3,7 @@ const DQ_API = "https://api.daoquan.vn/web/c/";
 
 async function DaoQuangetNameAndTotalChapter(pathName){
     const novelId =  GetId(pathName);
-    if (!novelId)    return {logo: DQ_LOGO, Approve : true};
+    if (!novelId)  return {logo: DQ_LOGO, Approve : true};
     return await DQGetNovelInfo(novelId);
 }
 
@@ -18,7 +18,6 @@ function GetId(pathName){
     const regex = /^\/([a-zA-Z0-9\-]+)\/(\d+)\/1\/chuong-(\d+)$/;
     const match = pathName.match(regex);
     if(match) return match[2];
-    console.log("kiemtra")
     return false;
 }
 

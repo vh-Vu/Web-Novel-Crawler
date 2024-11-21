@@ -3,7 +3,8 @@ const BNS_LOGO = "../img/BachNgocSach.png";
 const BNS_API = "https://ngocsach.com/api/"
 const STORY_BY_SLUG = "story-by-slug/";
 const FIVE_NEWEST_CHAPTERS = "/5-chapters-newest";
-const BNS_AUTHENTICATE = "https://bachngocsach.net.vn/api/auth/session";
+const DOMAIN = "bachngocsach.io.vn";
+const BNS_AUTHENTICATE = `https://${DOMAIN}/api/auth/session`;
 const CHAPTERS_HAVE_TO_BUY = "info-hasnt-bought-chapters/"
 
 
@@ -77,7 +78,7 @@ async function getNumberChaptersHaveToBuy(token,id) {
 
 async function getTokenAccess(){
     try{
-        const allCookies = await getCookies("bachngocsach.net.vn");
+        const allCookies = await getCookies(DOMAIN);
         if(allCookies){
             let __Host ={name: "__Host-next-auth.csrf-token",value:""};
             let __Secure__CallBack = {name: "__Secure-next-auth.callback-url",value:""};

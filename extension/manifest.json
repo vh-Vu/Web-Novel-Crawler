@@ -16,12 +16,10 @@
         "128": "img/icon128.png"
     },
     "host_permissions": [
-        "https://bachngocsach.net.vn/*",
+        "https://bachngocsach.io.vn/*",
+        "https://bachngocsach.app/*",
         "https://daoquan.vn/*"
     ],
-    "content_security_policy": {
-        "extension_pages": "script-src 'self'; object-src 'self'; connect-src https://ngocsach.com https://bachngocsach.net.vn https://daoquan.vn https://api.daoquan.vn"
-    },
     "background": {
         "service_worker": "js/background.js"
     }

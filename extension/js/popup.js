@@ -3,7 +3,7 @@ const WEBSITE_IDENTIFY = {
 };
 
 const SUPPORTED_WEBSITE = {
-    "bachngocsach.net.vn" : WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP,
+    "bachngocsach.io.vn" : WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP,
     "bachngocsach.app": WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP};
 
 const NONE = "none";
@@ -23,10 +23,8 @@ const LOADER = document.getElementById("waiting");
 
 
 function fetchToGetNovelInfo(){
-    changeDisplay(NOT_SUPPORTED_FRAME,NONE);
-    changeDisplay(SUPPORTED_FRAME,NONE);
     chrome.runtime.sendMessage({ action: "getNameAndTotalChapter"}, (message) => {
-    changeDisplay(LOADER,NONE)
+    changeDisplay(LOADER,NONE);
     if (message.error) {
         document.getElementById("message").innerText = message.error;
     } else if(!message.Approve){
@@ -50,15 +48,16 @@ function fetchToGetNovelInfo(){
     }
 });}
 
+
 //First clicking on extention icon
 fetchToGetNovelInfo();
 
 //Get a message on event DOM change or navigate site => refesh extention view
-chrome.runtime.onMessage.addListener((message) => {
-    if (message.action === "reload") {
-        fetchToGetNovelInfo();
-    }
-});
+// chrome.runtime.onMessage.addListener((message) => {
+//     if (message.action === "reload") {
+//         fetchToGetNovelInfo();
+//     }
+// });
 
 
 function SwitchSupportDiv(condition = true){

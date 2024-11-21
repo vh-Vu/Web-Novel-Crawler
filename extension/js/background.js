@@ -7,7 +7,7 @@ const WEBSITE_IDENTIFY = {
 }
 
 const SUPPORTED_WEBSITE = {
-    "bachngocsach.net.vn" : WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP,
+    "bachngocsach.io.vn" : WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP,
     "bachngocsach.app": WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP,
     "daoquan.vn" : WEBSITE_IDENTIFY.DAO_QUAN    
 }

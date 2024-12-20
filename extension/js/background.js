@@ -1,16 +1,7 @@
 importScripts('cookiesExtractor.js');
 importScripts('BachNgocSachVIPCollecter.js');
 importScripts('DaoQuanCollecter.js');
-const WEBSITE_IDENTIFY = {
-    BACH_NGOC_SACH_VIP : 1,
-    DAO_QUAN : 2
-}
-
-const SUPPORTED_WEBSITE = {
-    "bachngocsach.io.vn" : WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP,
-    "bachngocsach.app": WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP,
-    "daoquan.vn" : WEBSITE_IDENTIFY.DAO_QUAN    
-}
+importScripts('config.js');
 
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {

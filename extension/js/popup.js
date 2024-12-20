@@ -1,11 +1,3 @@
-const WEBSITE_IDENTIFY = {
-    BACH_NGOC_SACH_VIP : 1
-};
-
-const SUPPORTED_WEBSITE = {
-    "bachngocsach.io.vn" : WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP,
-    "bachngocsach.app": WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP};
-
 const NONE = "none";
 const CHOOSE_A_NOVEL = "Mời bạn chọn truyện";
 const NOT_LOGIN = "Bạn chưa đăng nhập";

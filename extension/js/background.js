@@ -1,7 +1,27 @@
 importScripts('cookiesExtractor.js');
 importScripts('BachNgocSachVIPCollecter.js');
 importScripts('DaoQuanCollecter.js');
-importScripts('config.js');
+//importScripts('config.js');
+let WEBSITE_IDENTIFY;
+let SUPPORTED_WEBSITE;
+
+let configLoaded = false;  
+
+async function loadConfig() {
+    try {
+        const configResponse = await fetch('https://raw.githubusercontent.com/vh-Vu/Web-Novel-Crawler/refs/heads/4th_f/extension/config.json');
+        const config = await configResponse.json();
+        
+        WEBSITE_IDENTIFY = config.WEBSITE_IDENTIFY;
+        SUPPORTED_WEBSITE = config.SUPPORTED_WEBSITE;
+        configLoaded = true;
+        console.log("Config loaded successfully:", WEBSITE_IDENTIFY, SUPPORTED_WEBSITE);
+    } catch (error) {
+        console.error("Error loading config:", error);
+    }
+}
+
+loadConfig();
 
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -11,6 +31,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 // const timeoutPromise = new Promise((_, reject) =>
                 //     setTimeout(() => reject(new Error('Timeout: Unable to get the current tab URL within the time limit.')), 5000)
                 // );
+
                 const { host, pathName } =  await getCurrentTabUrl(); //Promise.race([getCurrentTabUrl(), timeoutPromise]);
                 if(Approve(host)){
                     switch(SUPPORTED_WEBSITE[host]){
@@ -53,7 +74,7 @@ function getCurrentTabUrl() {
                 const url = currentTab.url; // Lấy URL
 
                 if (url) {
-                    const urlObject = new URL(url); // Tạo một đối tượng URL
+                    const urlObject = new URL(url); 
                     resolve({ // Sử dụng resolve thay vì return
                         host: urlObject.host,
                         pathName: urlObject.pathname

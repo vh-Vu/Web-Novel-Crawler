@@ -1,7 +1,7 @@
 importScripts('cookiesExtractor.js');
 importScripts('BachNgocSachVIPCollecter.js');
 importScripts('DaoQuanCollecter.js');
-//importScripts('config.js');
+importScripts('chapter.js')
 let WEBSITE_IDENTIFY;
 let SUPPORTED_WEBSITE;
 
@@ -11,17 +11,35 @@ async function loadConfig() {
     try {
         const configResponse = await fetch('https://raw.githubusercontent.com/vh-Vu/Web-Novel-Crawler/refs/heads/4th_f/extension/config.json');
         const config = await configResponse.json();
-        
+
         WEBSITE_IDENTIFY = config.WEBSITE_IDENTIFY;
         SUPPORTED_WEBSITE = config.SUPPORTED_WEBSITE;
         configLoaded = true;
+
+        chrome.storage.local.set({ WEBSITE_IDENTIFY, SUPPORTED_WEBSITE }, () => {
+            console.log("Config saved to chrome storage");
+        });
+        
         console.log("Config loaded successfully:", WEBSITE_IDENTIFY, SUPPORTED_WEBSITE);
     } catch (error) {
         console.error("Error loading config:", error);
     }
 }
 
-loadConfig();
+function loadConfigFromStorage() {
+    chrome.storage.local.get(['WEBSITE_IDENTIFY', 'SUPPORTED_WEBSITE'], (result) => {
+        if (result.WEBSITE_IDENTIFY && result.SUPPORTED_WEBSITE) {
+            WEBSITE_IDENTIFY = result.WEBSITE_IDENTIFY;
+            SUPPORTED_WEBSITE = result.SUPPORTED_WEBSITE;
+            configLoaded = true;
+            console.log("Config loaded from chrome storage:", WEBSITE_IDENTIFY, SUPPORTED_WEBSITE);
+        } else {
+            loadConfig();
+        }
+    });
+}
+
+loadConfigFromStorage()
 
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {

@@ -74,7 +74,7 @@ footer{
     display: flex;
 }
 /*Button */
-.donate{
+.btn{
     box-sizing: border-box;
     width: 200px;
     height: 35px;
@@ -90,9 +90,26 @@ footer{
     cursor: pointer;
 }
 
-.donate:hover{
+
+.donate-btn {
+    border-color: #7A949B;
+    color: #7A949B;
+}
+
+.donate-btn:hover{
     color: #37889E;
     border: 3px solid #37889E;
+}
+
+
+.download-btn {
+    border-color: #1EBFAD;
+    background: #1EBFAD;
+    color: white;
+}
+.download-btn:hover{
+    border: 3px solid #128C7E;
+    background-color: #128C7E;
 }
 
 .email{
@@ -199,12 +216,15 @@ footer{
     top: 150px;
     height: 200px;
     width: 300px;
+    display: flex;
     position: absolute;
-    justify-items: center;
     overflow: hidden;
     font-weight: 600;
     font-size: 20px;
     text-align: center;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
 }
 .element{
     height: 30px;

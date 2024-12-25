@@ -1,10 +1,12 @@
 const DQ_LOGO = "../img/DaoQuanLogo.png"
 const DQ_API = "https://api.daoquan.vn/web/c/";
+const DQDOMAIN = "https://daoquan.vn";
 
 async function DaoQuangetNameAndTotalChapter(pathName){
-    const novelId =  GetId(pathName);
+    const {novelId,slug} =  GetId(pathName);
+    console.log(pathName);
     if (!novelId)  return {logo: DQ_LOGO, Approve : true};
-    return await DQGetNovelInfo(novelId);
+    return await DQGetNovelInfo(novelId,slug);
 }
 
 
@@ -13,37 +15,43 @@ function GetId(pathName){
     if(pathName.includes(storyPath)){
         const novelPath = pathName.slice(storyPath.length);
         const indexOfForwardSlash = novelPath.indexOf("/");
-        return novelPath.slice(indexOfForwardSlash+1);
+        return {novelId: novelPath.slice(indexOfForwardSlash+1),slug: pathName};
     }
     const regex = /^\/([a-zA-Z0-9\-]+)\/(\d+)\/1\/chuong-(\d+)$/;
     const match = pathName.match(regex);
-    if(match) return match[2];
-    return false;
+    console.log(match);
+    if(match) return {novelId: match[2],slug: `${storyPath}${match[1]}/${match[2]}`};
+    return { novelId: null, slug: null }; 
 }
 
-async function DQGetNovelInfo(id) {
+async function DQGetNovelInfo(id,pathName) {
     try{
 
         const story = "stories/";
-        const storyChapters = `storyChapters/sort?filter={\"storiesId\":\"${id}\"}&range=[0,1]`;
         const request = await fetch(`${DQ_API}${story}${id}`);
-        const storyChaptersRequest = await fetch(`${DQ_API}${storyChapters}`)
-
-        if(request.status !== 200 || storyChaptersRequest.status!== 200) throw new Error("Vui lòng báo cho lập trình viên ở email dưới footer");
+        const CoverRequest = await fetch(`${DQDOMAIN}${pathName}`);
+        console.log(`${DQDOMAIN}${pathName}`);
+        if(request.status !== 200 || CoverRequest.status !== 200) throw new Error("Trang web đang bị lỗi, vui lòng thử lại sau");
         
         const response = await request.json();
-        const storyChaptersResponse = await storyChaptersRequest.json();
-        const last5Chapter = storyChaptersResponse.result.lastChapter.map(i=>`Chương ${i.number}: ${i.name}`);
+        const cover = CoverParser(await CoverRequest.text());
         const novelInfo = new Novel(
                                         DQ_LOGO,
                                         response.name,
                                         response.storyAuthors.name,
                                         response.countChapter,
-                                        last5Chapter,
-                                        0);
+                                        0,
+                                        cover
+                                        );
         return novelInfo;
     }
     catch{
         throw new Error("Vui lòng báo cho lập trình viên ở email dưới footer");
     }
+}
+
+function CoverParser(htmlText){
+    const regex = /<a[^>]*id="bookImg"[^>]*><img[^>]*src="([^"]*)"/;
+    const match = htmlText.match(regex);
+    return match[1].split('?')[0];;
 }

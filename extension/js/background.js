@@ -1,7 +1,6 @@
 importScripts('cookiesExtractor.js');
 importScripts('BachNgocSachVIPCollecter.js');
 importScripts('DaoQuanCollecter.js');
-importScripts('chapter.js')
 let WEBSITE_IDENTIFY;
 let SUPPORTED_WEBSITE;
 

@@ -1,4 +1,5 @@
 import Chapter from './chapter.js';
+//import Novel from './novel.js';
 
 const NONE = "none";
 const CHOOSE_A_NOVEL = "Mời bạn chọn truyện";
@@ -15,7 +16,7 @@ const LOGO_WEBSERVICE_IMG = document.getElementById("banner");
 const LOADER = document.getElementById("waiting");
 const Donate = document.getElementById("donate");
 const Download = document.getElementById("download");
-
+let CURRENT_NOVEL;
 
 
 function fetchToGetNovelInfo(){
@@ -29,6 +30,8 @@ function fetchToGetNovelInfo(){
     else if(message.Approve)
     {
         SwitchSupportDiv();
+        CURRENT_NOVEL = message;
+        console.log(message);
         LOGO_WEBSERVICE_IMG.src = message.logo;
         if(message.name){
             NOVEL_TITLE.innerText = message.name;
@@ -93,21 +96,21 @@ function changeDisplay(frame,state="block"){
 Donate.addEventListener('click',() =>{
 })
 
-Download.addEventListener('click',() =>{
-    const content = new Chapter("CHƯƠNG 1 ĐẠO THỐNG TRUYỀN THỪA HỆ THỐNG.",["Tại huyện Dự Châu, có một sơn thôn hẻo lánh tên là \"Diệp gia thôn\". Dựa theo tập tục của thôn này, ban đêm, mỗi nhà đều phải ở trước cửa đốt hai xấp tiền giấy, một xấp đồ cúng, một... xấp khác là cho cô hồn dã quỷ qua đường. Tiền giấy là dành cho người nhà để họ thuận lợi ra đi, không gặp khó khăn gì trên đường xuống dưới.",
-                            "Đốt xong tiền giấy, mỗi nhà đều đóng chặt cửa, cài chặt then sớm nghỉ ngơi, những người tin phật tín đạo thì còn cầu khẩn trong nhà, cầu cho đêm nay vượt qua bình an.",
-                            "Đêm khuya, mưa dông nổi lên, đập vào lá cây rào rào xào xạc giống như tiếng cô hồn dã quỷ bộ hành, tiếng gió thổi nức nở như than như khóc, làm cho bầu không khí nơi đây vốn bất thường lại càng quỷ dị hơn."]);
-    const me = content.getChapter();
-    //console.log(me);
-    const blob = new Blob([me], { type: 'text/plain' });
+Download.addEventListener('click', async () =>{
+    // const content = new Chapter("CHƯƠNG 1 ĐẠO THỐNG TRUYỀN THỪA HỆ THỐNG.",["Tại huyện Dự Châu, có một sơn thôn hẻo lánh tên là \"Diệp gia thôn\". Dựa theo tập tục của thôn này, ban đêm, mỗi nhà đều phải ở trước cửa đốt hai xấp tiền giấy, một xấp đồ cúng, một... xấp khác là cho cô hồn dã quỷ qua đường. Tiền giấy là dành cho người nhà để họ thuận lợi ra đi, không gặp khó khăn gì trên đường xuống dưới.",
+    //                         "Đốt xong tiền giấy, mỗi nhà đều đóng chặt cửa, cài chặt then sớm nghỉ ngơi, những người tin phật tín đạo thì còn cầu khẩn trong nhà, cầu cho đêm nay vượt qua bình an.",
+    //                         "Đêm khuya, mưa dông nổi lên, đập vào lá cây rào rào xào xạc giống như tiếng cô hồn dã quỷ bộ hành, tiếng gió thổi nức nở như than như khóc, làm cho bầu không khí nơi đây vốn bất thường lại càng quỷ dị hơn."]);
+    const zip = new JSZip();
+    const image = await fetch(CURRENT_NOVEL.cover).then(res => res.blob());
+    zip.file("img/Cover.jpg",image);
+    zip.file("metadata.opf", `t`);
+    zip.file("mimetype", "application/epub+zip");
 
-    const url = URL.createObjectURL(blob);
+    const blob = await zip.generateAsync({ type: "blob" });
 
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'sample.txt'; 
-
-    a.click();
-
-    URL.revokeObjectURL(url);
-})
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'files.epub';
+    link.click();
+    URL.revokeObjectURL(link.href);
+});

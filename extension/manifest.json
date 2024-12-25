@@ -18,7 +18,8 @@
     "host_permissions": [
         "https://bachngocsach.io.vn/*",
         "https://bachngocsach.app/*",
-        "https://daoquan.vn/*"
+        "https://daoquan.vn/*",
+        "https://ngocsach.com/*"
     ],
     "background": {
         "service_worker": "js/background.js"

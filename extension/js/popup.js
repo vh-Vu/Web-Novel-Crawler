@@ -33,8 +33,8 @@ function fetchToGetNovelInfo(){
         CURRENT_NOVEL = message;
         console.log(message);
         LOGO_WEBSERVICE_IMG.src = message.logo;
-        if(message.name){
-            NOVEL_TITLE.innerText = message.name;
+        if(message.title){
+            NOVEL_TITLE.innerText = message.title;
             TOTAL_CHAPTERS.innerText = message.totalChapter;
             AUTHOR.innerText = message.author;
             if (message.availableChapter== message.totalChapter+1){
@@ -110,7 +110,7 @@ Download.addEventListener('click', async () =>{
 
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `${CURRENT_NOVEL.name} - ${CURRENT_NOVEL.author} (Web Novel Crawler).epub`;
+    link.download = `${CURRENT_NOVEL.title} - ${CURRENT_NOVEL.author} (Web Novel Crawler).epub`;
     link.click();
     URL.revokeObjectURL(link.href);
     //console.log(CURRENT_NOVEL);
@@ -135,7 +135,7 @@ function createMetaData(novel){
                  version="2.0">
         
             <metadata>
-                <dc:title lang="vi">${novel.name}</dc:title>
+                <dc:title lang="vi">${novel.title}</dc:title>
                 <dc:creator>${novel.author}</dc:creator>
                 <dc:language>vi</dc:language>
                 <dc:description>
@@ -145,6 +145,9 @@ function createMetaData(novel){
                             <p>Phát hành: ${novel.publisher}</p>
                             <p>Ứng dụng tạo ebook: <a href="https://github.com/vh-Vu/Web-Novel-Crawler"><strong style="color: #6cb4ee">Web Novel Crawler</strong></a></p>
                             <p>Tổng số chương: ${novel.totalChapter}</p>
+                            <div>
+                            ${novel.description}
+                            </div>
                         </div>
                     ]]>
                 </dc:description>

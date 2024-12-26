@@ -26,22 +26,21 @@ function GetId(pathName){
 
 async function DQGetNovelInfo(id,pathName) {
     try{
-
         const story = "stories/";
         const request = await fetch(`${DQ_API}${story}${id}`);
-        const CoverRequest = await fetch(`${DQDOMAIN}${pathName}`);
-        console.log(`${DQDOMAIN}${pathName}`);
-        if(request.status !== 200 || CoverRequest.status !== 200) throw new Error("Trang web đang bị lỗi, vui lòng thử lại sau");
-        
+        if(request.status !== 200 ) throw new Error("Trang web đang bị lỗi, vui lòng thử lại sau");
         const response = await request.json();
-        const cover = CoverParser(await CoverRequest.text());
         const novelInfo = new Novel(
                                         DQ_LOGO,
                                         response.name,
                                         response.storyAuthors.name,
                                         response.countChapter,
                                         0,
-                                        cover
+                                        `https://img.daoquan.vn/get/images/doctruyen/${response.images.file}`,
+                                        formatDescription(response.description),
+                                        response.usersCreator.fullname,
+                                        DQDOMAIN,
+                                        `${response.storyCategoriesParent.name}, ${response.storyTypes.name}`
                                         );
         return novelInfo;
     }
@@ -54,4 +53,14 @@ function CoverParser(htmlText){
     const regex = /<a[^>]*id="bookImg"[^>]*><img[^>]*src="([^"]*)"/;
     const match = htmlText.match(regex);
     return match[1].split('?')[0];;
+}
+
+//Biến /n thành thẻ <p></p>
+function formatDescription(description) {
+    let paragraphs = description.split('\n\n');
+    let formattedDescription = paragraphs.map(paragraph => {
+        return `<p>${paragraph.replace(/\n/g, ' ')}</p>`;
+    }).join('');
+
+    return formattedDescription;
 }

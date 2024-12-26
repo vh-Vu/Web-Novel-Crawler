@@ -20,3 +20,7 @@
 - Nov-8-24 (08-11-24), Sau 2 ngày vật vã cùng ReactJS trong project nhóm thì tôi cũng đã có thời gian nghiên cứu lại mô hình của DaoQuan. Tôi đã phân tích DOM được vào 2 ngày trước, nhưng sau khi làm 1 vài bài test thì nó hơi tệ khi phải xử lí khá nhiều, nhất là phần regax và parser. Đây là tình huống chắc chắn phải chịu khi tôi không có được thông tin api. Tin vui là sao 1 hồi phá phách thì tôi vô tình mò được api. Thế là kế hoạch cất công để mổ xẻ DOM quăng vào sọt rác, nhưng xứng đáng,
 - Nov-9-24 (09-11-24), Ok cuối cùng cũng đã fetch xong phần DaoQuan. Khá ok, còn vài lỗi hơi lừa fix, nhưng nhìn chung thì lỗi đó sẽ xuất hiện khi mạng gián đoạn, không biết cách fix @@.
 - Dec-21-24 (21-12-24), sau khoảng thời gian dài thì cuối cùng đã xong học phần cuối của học kỳ, tuần sau lại bắt đầu học kỳ mới. Không biết khi nào mới có thể làm cho dự án này xong. Tin vui là đã tìm hiểu được cấu trúc epub file nên có thể xuất thẳng sang epub file.
+
+- Dec-25-24 (25-12-24), Với tình trạng hiện tại thì sắp thành đống code thối rồi. Anw, với sự trợ giúp của thư viện Zip thì công cuộc đỡ hơn phần nào. Hôm nay đã hoàn thành đc get Cover.
+
+- Dec-26-24 (26-12-24), Đã hoàn thành xong phần đầu metadata, ko biết ứng dụng khi rip 1000 chương truyện sẽ thế nào

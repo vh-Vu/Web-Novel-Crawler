@@ -1,14 +1,15 @@
+
 class Novel{
     constructor(logo,title, author, totalChapter, chaptersToBuy,cover) {
         this.logo = logo;
-        this.name = title;
+        this.title = title;
         this.author = author;
         this.totalChapter = totalChapter;
         this.availableChapter = this.totalChapter - chaptersToBuy;
         this.cover = cover;
-        //this.fiveNewestChapter = fiveNewestChapter;
+        this.publisher = "daoquan.vn";
+        this.contributor = "dummy";
+        this.subject = ["Hài","Không hài","Mưa"].join(',');
         this.Approve = true;
     }
 }
-
-//export default Novel;

@@ -1,6 +1,7 @@
 
 class Novel{
-    constructor(logo,title, author, totalChapter, chaptersToBuy,cover,description,contributor,publisher,subject) {
+    constructor(id,logo,title, author, totalChapter, chaptersToBuy,cover,description,contributor,publisher,subject) {
+        this.id = id;
         this.logo = logo;
         this.title = title;
         this.author = author;

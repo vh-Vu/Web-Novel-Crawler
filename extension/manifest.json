@@ -4,7 +4,7 @@
     "name": "Web Novel Crawler",
     "description": "Tạo ebook từ web truyện. Get ebook from website",
     "version": "1.0",
-    "permissions":  ["tabs", "scripting","cookies","storage"],
+    "permissions":  ["tabs", "scripting","cookies","storage","downloads"],
     "action": {
         "default_icon": "img/icon64.png",
         "default_title": "Web Novel Crawler",
@@ -18,7 +18,8 @@
     "host_permissions": [
         "https://bachngocsach.io.vn/*",
         "https://bachngocsach.app/*",
-        "https://daoquan.vn/*"
+        "https://daoquan.vn/*",
+        "https://ngocsach.com/*"
     ],
     "background": {
         "service_worker": "js/background.js"

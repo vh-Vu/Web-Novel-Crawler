@@ -1,11 +1,17 @@
+
 class Novel{
-    constructor(logo,title, author, totalChapter , fiveNewestChapter,chaptersToBuy) {
+    constructor(id,logo,title, author, totalChapter, chaptersToBuy,cover,description,contributor,publisher,subject) {
+        this.id = id;
         this.logo = logo;
-        this.name = title;
+        this.title = title;
         this.author = author;
         this.totalChapter = totalChapter;
         this.availableChapter = this.totalChapter - chaptersToBuy;
-        this.fiveNewestChapter = fiveNewestChapter;
+        this.cover = cover;
+        this.publisher = publisher;
+        this.contributor = contributor;
+        this.subject = subject;
+        this.description = description;
         this.Approve = true;
     }
 }

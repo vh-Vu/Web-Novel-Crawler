@@ -3,7 +3,7 @@ const BNS_LOGO = "../img/BachNgocSach.png";
 const BNS_API = "https://ngocsach.com/api/"
 const STORY_BY_SLUG = "story-by-slug/";
 const FIVE_NEWEST_CHAPTERS = "/5-chapters-newest";
-const DOMAIN = "bachngocsach.io.vn";
+const DOMAIN = "bnsvip.com";
 const BNS_AUTHENTICATE = `https://${DOMAIN}/api/auth/session`;
 const CHAPTERS_HAVE_TO_BUY = "info-hasnt-bought-chapters/"
 

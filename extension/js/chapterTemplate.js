@@ -1,0 +1,1 @@
+var chapterTemplate=(no,title,content)=>{return (`<?xml version='1.0' encoding='utf-8'?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="vi" xml:lang="vi"><head></head><body><h1>Chương ${no}: ${title}</h1>${content}</body></html>`)}

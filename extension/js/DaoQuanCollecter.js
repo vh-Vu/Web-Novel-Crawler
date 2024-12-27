@@ -1,47 +1,48 @@
 const DQ_LOGO = "../img/DaoQuanLogo.png"
 const DQ_API = "https://api.daoquan.vn/web/c/";
-const DQDOMAIN = "https://daoquan.vn";
+const DQDOMAIN = "daoquan.vn";
+const E5_CHAPTERS_API = (id) => `${DQ_API}storyChapters/sort?filter={%22storiesId%22:%22${id}%22}&range=[0,100000]&sort=[%22number%22,%22asc%22]`;
 
 async function DaoQuangetNameAndTotalChapter(pathName){
-    const {novelId,slug} =  GetId(pathName);
+    const novelId=  GetId(pathName);
     console.log(pathName);
     if (!novelId)  return {logo: DQ_LOGO, Approve : true};
-    return await DQGetNovelInfo(novelId,slug);
+    return await DQGetNovelInfo(novelId);
 }
-
 
 function GetId(pathName){
     const storyPath = "/doc-truyen/";
     if(pathName.includes(storyPath)){
         const novelPath = pathName.slice(storyPath.length);
         const indexOfForwardSlash = novelPath.indexOf("/");
-        return {novelId: novelPath.slice(indexOfForwardSlash+1),slug: pathName};
+        return novelPath.slice(indexOfForwardSlash+1);
     }
     const regex = /^\/([a-zA-Z0-9\-]+)\/(\d+)\/1\/chuong-(\d+)$/;
     const match = pathName.match(regex);
     console.log(match);
-    if(match) return {novelId: match[2],slug: `${storyPath}${match[1]}/${match[2]}`};
-    return { novelId: null, slug: null }; 
+    if(match) return match[2];
+    return null; 
 }
 
-async function DQGetNovelInfo(id,pathName) {
+async function DQGetNovelInfo(id) {
     try{
         const story = "stories/";
         const request = await fetch(`${DQ_API}${story}${id}`);
         if(request.status !== 200 ) throw new Error("Trang web đang bị lỗi, vui lòng thử lại sau");
         const response = await request.json();
         const novelInfo = new Novel(
-                                        DQ_LOGO,
-                                        response.name,
-                                        response.storyAuthors.name,
-                                        response.countChapter,
-                                        0,
-                                        `https://img.daoquan.vn/get/images/doctruyen/${response.images.file}`,
-                                        formatDescription(response.description),
-                                        response.usersCreator.fullname,
-                                        DQDOMAIN,
-                                        `${response.storyCategoriesParent.name}, ${response.storyTypes.name}`
-                                        );
+                                    response.id,
+                                    DQ_LOGO,
+                                    response.name,
+                                    response.storyAuthors.name,
+                                    response.countChapter,
+                                    0,
+                                    `https://img.daoquan.vn/get/images/doctruyen/${response.images.file}`,
+                                    formatDescription(response.description),
+                                    response.usersCreator.fullname,
+                                    DQDOMAIN,
+                                    `${response.storyCategoriesParent.name}, ${response.storyTypes.name}, ${response.storyCategories[0].name}`
+                                    );
         return novelInfo;
     }
     catch{
@@ -49,18 +50,38 @@ async function DQGetNovelInfo(id,pathName) {
     }
 }
 
-function CoverParser(htmlText){
-    const regex = /<a[^>]*id="bookImg"[^>]*><img[^>]*src="([^"]*)"/;
-    const match = htmlText.match(regex);
-    return match[1].split('?')[0];;
-}
 
 //Biến /n thành thẻ <p></p>
 function formatDescription(description) {
-    let paragraphs = description.split('\n\n');
+    let paragraphs = description.split('\n');
     let formattedDescription = paragraphs.map(paragraph => {
         return `<p>${paragraph.replace(/\n/g, ' ')}</p>`;
     }).join('');
-
     return formattedDescription;
+}
+
+
+async function DaoQuanGetTotalChapters(id){
+    try{
+        console.log(`${E5_CHAPTERS_API(id)}`);
+    const request = await fetch(`${E5_CHAPTERS_API(id)}`);
+    if(request.status !== 200 ) throw new Error("Trang web đang bị lỗi, vui lòng thử lại sau");
+        const response = await request.json();
+        return response.result.list;
+    }
+    catch{
+        throw new Error("Vui lòng báo cho lập trình viên ở email dưới footer");
+    }
+}
+
+async function DaoQuanGetChapterContent(ChapterID){
+    try {
+        const request = await fetch(`${DQ_API}storyChapters/${ChapterID}`);
+        if(request.status !== 200 ) throw new Error("Trang web đang bị lỗi, vui lòng thử lại sau");
+            const response = await request.json();
+            return formatDescription(response.content);
+        }
+    catch {
+        throw new Error("Vui lòng báo cho lập trình viên ở email dưới footer");
+    }
 }

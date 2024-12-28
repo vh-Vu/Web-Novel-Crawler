@@ -42,7 +42,6 @@ function fetchToGetNovelInfo(){
                 AVAILABLE_CHAPTERS.innerText =  message.availableChapter;
             }
             changeDisplay(NOVEL_INFO_FRAME);
-            //Show5Newsest(message.fiveNewestChapter);
         }else{
             document.getElementById("form").innerText= CHOOSE_A_NOVEL;
             changeDisplay(NOVEL_INFO_FRAME,NONE);

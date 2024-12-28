@@ -1,12 +1,7 @@
 importScripts('cookiesExtractor.js');
 importScripts('BachNgocSachVIPCollecter.js');
 importScripts('DaoQuanCollecter.js');
-importScripts('jszip.min.js');
-importScripts('chapterTemplate.js');
-importScripts('tableOfContents.min.js');
-importScripts('coverpage.js');
-importScripts('metaData.min.js');
-importScripts('container.js');
+importScripts('ebook.js');
 let WEBSITE_IDENTIFY;
 let SUPPORTED_WEBSITE;
 
@@ -162,51 +157,30 @@ async function createDownloadWindow() {
 }
 
 async function startDownload(novel) {
-    const zip = new JSZip();
     const totalChapter = await DaoQuanGetTotalChapters(novel.id);
-    const manifestItems = [];
-    const spineItems = [];
-    const tocOrder = [];
-    const totalChapters = totalChapter.map((chapter, index) => {
-        const i = index + 1;
-        const chapterId = (i).toString().padStart(4, '0');
-        const filePath = `OEBPS/contents/chapter${chapterId}.xhtml`;
-        manifestItems.push(`<item id="${chapterId}" href="${filePath}" media-type="application/xhtml+xml" />`);
-        spineItems.push(`<itemref idref="${chapterId}" />`);
-        tocOrder.push(`<navPoint id="navPoint-${i}" playOrder="${i}"><navLabel><text>${chapter.number}. ${chapter.name}</text></navLabel><content src="${filePath}"/></navPoint>`);
-        return {
-            id: chapter.id,
-            name: chapter.name,
-            number: chapter.number,
-            chapterId: chapterId,
-            filePath: filePath
-        };
-    });
-
+    console.log(totalChapter[0].number);
+    let ebook = new Ebook(novel.title,novel.cover,novel.author,novel.publisher,novel.contributor,novel.subject,novel.description)
     // Thêm các chương vào ZIP
-    for (let i = 0; i < novel.totalChapter; i++) {
-        const chapterContent = await DaoQuanGetChapterContent(totalChapters[i].id);
+    
+    console.log(await DaoQuanGetChapterContent(totalChapter[0].id));
+    for (let i = 0; i < totalChapter.length; i++) {
+        const chapterContent = await DaoQuanGetChapterContent(totalChapter[i].id);
+        ebook.addChapter(totalChapter[i].number,totalChapter[i].name,chapterContent);
         chrome.runtime.sendMessage({
             action: "updateProgress",
-            message: `Đang tải Chương ${totalChapters[i].number}: ${totalChapters[i].name}`,
+            message: `Đang tải Chương ${totalChapter[i].number}: ${totalChapter[i].name}`,
             progress: ((i + 1) / novel.totalChapter) * 100
         });
-        zip.file(totalChapters[i].filePath, chapterTemplate(totalChapters[i].number, totalChapters[i].name, chapterContent));
     }
-
-    const image = await fetch(novel.cover).then(res => res.blob());
-    zip.file("cover.jpg", image);
-    zip.file("META-INF/container.xml", container);
-    zip.file("metadata.opf", createMetaData(novel, manifestItems, spineItems));
-    zip.file("mimetype", "application/epub+zip");
-    zip.file("CoverPage.xhtml", CoverPage);
-    zip.file("toc.ncx", tableOfContents(novel.title, novel.author, tocOrder));
-    const zipContent = await zip.generateAsync({ type: "base64" });
-    const dataURL = `data:application/epub+zip;base64,${zipContent}`;
-
+    chrome.runtime.sendMessage({
+        action: "updateProgress",
+        message: `Đang tạo sách`,
+        progress: 100
+    });
+    const dataURL = await ebook.genBook();
     chrome.downloads.download({
         url: dataURL,
-        filename: `${removeVietnameseTones(novel.title)}-${removeVietnameseTones(novel.author)}_Web-Novel-Crawler.zip`,
+        filename: `${removeVietnameseTones_and_SpecialCharacter(novel.title)}-${removeVietnameseTones_and_SpecialCharacter(novel.author)}_Web-Novel-Crawler.zip`,
         saveAs: true
     }, (downloadId) => {
         console.log("Download started with ID:", downloadId);
@@ -214,7 +188,7 @@ async function startDownload(novel) {
 }
 
 
-function removeVietnameseTones(str) {
+function removeVietnameseTones_and_SpecialCharacter(str) {
     const map = {
         'a': /[àáạảãâầấậẩẫăằắặẳẵ]/g,
         'e': /[èéẹẻẽêềếệểễ]/g,
@@ -235,6 +209,7 @@ function removeVietnameseTones(str) {
     for (let letter in map) {
         str = str.replace(map[letter], letter);
     }
+    str = str.replace(/[^a-zA-Z0-9\s]/g, '');
     return str;
 }
 

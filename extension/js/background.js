@@ -10,7 +10,7 @@ let isDownload = false;
 
 async function loadConfig() {
     try {
-        const configResponse = await fetch('https://raw.githubusercontent.com/vh-Vu/Web-Novel-Crawler/refs/heads/4th_f/extension/config.json');
+        const configResponse = await fetch('https://raw.githubusercontent.com/vh-Vu/Web-Novel-Crawler/refs/heads/main/extension/config.json');
         const config = await configResponse.json();
 
         WEBSITE_IDENTIFY = config.WEBSITE_IDENTIFY;
@@ -141,7 +141,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 async function createDownloadWindow() {
     return new Promise((resolve, reject) => {
-        chrome.windows.create({
+        chrome.windows.create({ 
             url: '../process.html',
             type: 'popup',
             width: 350,
@@ -158,11 +158,8 @@ async function createDownloadWindow() {
 
 async function startDownload(novel) {
     const totalChapter = await DaoQuanGetTotalChapters(novel.id);
-    console.log(totalChapter[0].number);
     let ebook = new Ebook(novel.title,novel.cover,novel.author,novel.publisher,novel.contributor,novel.subject,novel.description)
     // Thêm các chương vào ZIP
-    
-    console.log(await DaoQuanGetChapterContent(totalChapter[0].id));
     for (let i = 0; i < totalChapter.length; i++) {
         const chapterContent = await DaoQuanGetChapterContent(totalChapter[i].id);
         ebook.addChapter(totalChapter[i].number,totalChapter[i].name,chapterContent);

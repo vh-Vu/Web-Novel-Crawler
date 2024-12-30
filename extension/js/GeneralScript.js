@@ -38,6 +38,6 @@ function UpdateProgress(number,title,current,total){
     chrome.runtime.sendMessage({
         action: "updateProgress",
         message: `Đang tải Chương ${number}: ${title}`,
-        progress: (parseInt(current) / total) * 100
+        progress: (current / total) * 100
     });
 }

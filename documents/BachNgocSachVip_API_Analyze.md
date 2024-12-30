@@ -26,7 +26,6 @@ Novel slug
 
 ### Header
 > Not required
-
 ### Responce API
 
 <details>

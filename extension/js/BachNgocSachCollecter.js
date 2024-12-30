@@ -36,9 +36,9 @@ async function BNSAddChapterProcess(novel,ebook){
     const firstRequest = await fetch(`https://bnsach.com/reader/mucluc-jump/${novel.id}/${chapterID}`);
     const firstResponse = await firstRequest.json();
     let current = 1;
-    const {chapterNo,chapterTitle} = BNSsplitTitleAndNum(firstResponse[0].title);
-    UpdateProgress(chapterNo,chapterTitle,current,novel.totalChapter);
-    ebook.addChapter(chapterNo,chapterTitle,await getChapterContents(firstResponse[0].nid));
+    const chapterTitle = BNSsplitTitle(firstResponse[0].title);
+    UpdateProgress(current,chapterTitle,current,novel.totalChapter);
+    ebook.addChapter(current,chapterTitle,await getChapterContents(firstResponse[0].nid));
     while(true){
         let flag = false
         const request = await fetch(`https://bnsach.com/reader/mucluc-jump/${novel.id}/${chapterID}`);
@@ -47,9 +47,9 @@ async function BNSAddChapterProcess(novel,ebook){
         for(let i = 0; i<response.length;i++){
             if(flag){
                 current++;
-                const {chapterNo,chapterTitle} = BNSsplitTitleAndNum(response[i].title);
-                UpdateProgress(chapterNo,chapterTitle,current,novel.totalChapter);
-                ebook.addChapter(chapterNo,chapterTitle,await getChapterContents(response[i].nid));
+                const chapterTitle = BNSsplitTitle(response[i].title);
+                UpdateProgress(current,chapterTitle,current,novel.totalChapter);
+                ebook.addChapter(current,chapterTitle,await getChapterContents(response[i].nid));
             }
             if(response[i].current) flag = true;
         }
@@ -59,15 +59,14 @@ async function BNSAddChapterProcess(novel,ebook){
 }
 
 
-function BNSsplitTitleAndNum(title){
+function BNSsplitTitle(title){
     if (title.indexOf(":") > -1){
         const colon = title.indexOf(":");
         const begin = title.indexOf(":.") >-1? colon + 3 : colon + 2;
-        const chapterNo = title.slice(7,colon);
         const chapterTitle = title.slice(begin);
-        return {chapterNo,chapterTitle};
+        return chapterTitle;
     }
-    return {chapterNo: 0,chapterTitle: title};
+    return title;
 }
 
 

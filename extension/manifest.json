@@ -19,7 +19,8 @@
         "https://bnsvip.vn/*",
         "https://bachngocsach.app/*",
         "https://daoquan.vn/*",
-        "https://ngocsach.com/*"
+        "https://ngocsach.com/*",
+        "https://bnsach.com/*"
     ],
     "background": {
         "service_worker": "js/background.js"

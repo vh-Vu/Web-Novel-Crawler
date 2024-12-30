@@ -25,3 +25,5 @@
 
 - Dec-26-24 (26-12-24), Đã hoàn thành xong phần đầu metadata, ko biết ứng dụng khi rip 1000 chương truyện sẽ thế nào
 - Dec-27-24 (27-12-24), Đã hoàn thành cơ bản phần tải về epub, sau khi thử hiệu năng thì 1000 chương truyện ở trang daoquan.vn khoảng 2-3p không tệ lắm. Giờ là lúc đi dọn dẹp code thối, chỉnh sửa giao diện cho đẹp, thêm font chữ cho tương thích tốt.
+
+- Dec-30-24 (30-12-24), Tiến hành tích hợp thêm trang bnsach.com.

@@ -1,6 +1,7 @@
 importScripts('cookiesExtractor.js');
 importScripts('BachNgocSachVIPCollecter.js');
 importScripts('DaoQuanCollecter.js');
+importScripts('BachNgocSachCollecter.js');
 importScripts('ebook.js');
 let WEBSITE_IDENTIFY;
 let SUPPORTED_WEBSITE;
@@ -10,7 +11,7 @@ let isDownload = false;
 
 async function loadConfig() {
     try {
-        const configResponse = await fetch('https://raw.githubusercontent.com/vh-Vu/Web-Novel-Crawler/refs/heads/main/extension/config.json');
+        const configResponse = await fetch('../config.json');
         const config = await configResponse.json();
 
         WEBSITE_IDENTIFY = config.WEBSITE_IDENTIFY;
@@ -41,7 +42,7 @@ function loadConfigFromStorage() {
 }
 
 loadConfigFromStorage()
-
+// loadConfig()
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "getNameAndTotalChapter" ) {
@@ -55,10 +56,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                         switch(SUPPORTED_WEBSITE[host]){
                             case 1:
                                 sendResponse(await BNSVIPgetNameAndTotalChapter(pathName));
-                            break;
+                                break;
                             case 2:
                                 sendResponse(await DaoQuangetNameAndTotalChapter(pathName));
-                            break;
+                                break;
+                            case 3:
+                                sendResponse(await BNSgetNovelInfo(pathName))
+                                break;
                         }
                     }else{
                         sendResponse({Approve:false})

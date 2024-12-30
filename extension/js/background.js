@@ -1,6 +1,8 @@
 importScripts('cookiesExtractor.js');
+importScripts('GeneralScript.js')
 importScripts('BachNgocSachVIPCollecter.js');
 importScripts('DaoQuanCollecter.js');
+importScripts('BachNgocSachCollecter.js');
 importScripts('ebook.js');
 let WEBSITE_IDENTIFY;
 let SUPPORTED_WEBSITE;
@@ -10,7 +12,7 @@ let isDownload = false;
 
 async function loadConfig() {
     try {
-        const configResponse = await fetch('https://raw.githubusercontent.com/vh-Vu/Web-Novel-Crawler/refs/heads/main/extension/config.json');
+        const configResponse = await fetch('../config.json');
         const config = await configResponse.json();
 
         WEBSITE_IDENTIFY = config.WEBSITE_IDENTIFY;
@@ -41,7 +43,7 @@ function loadConfigFromStorage() {
 }
 
 loadConfigFromStorage()
-
+loadConfig()
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "getNameAndTotalChapter" ) {
@@ -55,10 +57,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                         switch(SUPPORTED_WEBSITE[host]){
                             case 1:
                                 sendResponse(await BNSVIPgetNameAndTotalChapter(pathName));
-                            break;
+                                break;
                             case 2:
                                 sendResponse(await DaoQuangetNameAndTotalChapter(pathName));
-                            break;
+                                break;
+                            case 3:
+                                sendResponse(await BNSgetNovelInfo(pathName))
+                                break;
                         }
                     }else{
                         sendResponse({Approve:false})
@@ -119,7 +124,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             try {
                 isDownload = true;
                 const downloadWindow = await createDownloadWindow();
-
+                console.log(message.novel)
                 await startDownload(message.novel);
 
                 chrome.windows.remove(downloadWindow.id, () => {
@@ -157,18 +162,17 @@ async function createDownloadWindow() {
 }
 
 async function startDownload(novel) {
-    const totalChapter = await DaoQuanGetTotalChapters(novel.id);
     let ebook = new Ebook(novel.title,novel.cover,novel.author,novel.publisher,novel.contributor,novel.subject,novel.description)
-    // Thêm các chương vào ZIP
-    for (let i = 0; i < totalChapter.length; i++) {
-        const chapterContent = await DaoQuanGetChapterContent(totalChapter[i].id);
-        ebook.addChapter(totalChapter[i].number,totalChapter[i].name,chapterContent);
-        chrome.runtime.sendMessage({
-            action: "updateProgress",
-            message: `Đang tải Chương ${totalChapter[i].number}: ${totalChapter[i].name}`,
-            progress: ((i + 1) / novel.totalChapter) * 100
-        });
+    // Thêm các chương vào 
+    switch(SUPPORTED_WEBSITE[novel.publisher]){
+        case 2:
+            await DaoQuanAddChapterProcess(novel,ebook);
+            break;
+        case 3:
+            await BNSAddChapterProcess(novel,ebook);
+            break;
     }
+
     chrome.runtime.sendMessage({
         action: "updateProgress",
         message: `Đang tạo sách`,
@@ -183,31 +187,4 @@ async function startDownload(novel) {
         console.log("Download started with ID:", downloadId);
     });
 }
-
-
-function removeVietnameseTones_and_SpecialCharacter(str) {
-    const map = {
-        'a': /[àáạảãâầấậẩẫăằắặẳẵ]/g,
-        'e': /[èéẹẻẽêềếệểễ]/g,
-        'i': /[ìíịỉĩ]/g,
-        'o': /[òóọỏõôồốộổỗơờớợởỡ]/g,
-        'u': /[ùúụủũưừứựửữ]/g,
-        'y': /[ỳýỵỷỹ]/g,
-        'd': /[đ]/g,
-        'A': /[ÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴ]/g,
-        'E': /[ÈÉẸẺẼÊỀẾỆỂỄ]/g,
-        'I': /[ÌÍỊỈĨ]/g,
-        'O': /[ÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠ]/g,
-        'U': /[ÙÚỤỦŨƯỪỨỰỬỮ]/g,
-        'Y': /[ỲÝỴỶỸ]/g,
-        'D': /[Đ]/g
-    };
-
-    for (let letter in map) {
-        str = str.replace(map[letter], letter);
-    }
-    str = str.replace(/[^a-zA-Z0-9\s]/g, '');
-    return str;
-}
-
 

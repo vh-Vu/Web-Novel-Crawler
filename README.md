@@ -12,6 +12,7 @@ Dự án phục vụ nhu cầu chuyển đổi từ web truyện online sang ebo
 ## Website hỗ trợ
 - [bachngocsach.net.vn](https://bachngocsach.net.vn/)
 - [daoquan.vn](https://daoquan.vn/)
+- [bnsach.com](https://bnsach.com/)
 
 ## Hướng dãn kỹ thuật
 

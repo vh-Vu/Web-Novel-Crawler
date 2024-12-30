@@ -19,8 +19,15 @@
         "https://bnsvip.vn/*",
         "https://bachngocsach.app/*",
         "https://daoquan.vn/*",
-        "https://ngocsach.com/*"
+        "https://ngocsach.com/*",
+        "https://bnsach.com/*"
     ],
+    "content_scripts": [
+    {
+      "matches": ["https://bnsach.com/*"],
+      "js": ["js/contentSite.js"]
+    }
+  ],
     "background": {
         "service_worker": "js/background.js"
     }

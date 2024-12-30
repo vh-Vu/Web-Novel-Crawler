@@ -61,7 +61,7 @@ class Ebook{
     makeTableOfContents(){
         const ToC = [];
         for(let i = 0; i<this.totalChapters;i++){
-            ToC.push(`<navPoint id="navPoint-${i+1}" playOrder="${i+1}"><navLabel><text>${this.chapters[i]}. ${this.ChaptersNuberic[i]}</text></navLabel><content src="${this.filePaths[i]}"/></navPoint>`);
+            ToC.push(`<navPoint id="navPoint-${i+1}" playOrder="${i+1}"><navLabel><text>${this.ChaptersNuberic[i]}. ${this.chapters[i]}</text></navLabel><content src="${this.filePaths[i]}"/></navPoint>`);
         }
         return tableOfContents(this.title,this.author,ToC);
     }

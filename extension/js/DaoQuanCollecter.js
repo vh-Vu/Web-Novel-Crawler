@@ -4,10 +4,9 @@ const DQDOMAIN = "daoquan.vn";
 const E5_CHAPTERS_API = (id) => `${DQ_API}storyChapters/sort?filter={%22storiesId%22:%22${id}%22}&range=[0,100000]&sort=[%22number%22,%22asc%22]`;
 
 async function DaoQuangetNameAndTotalChapter(pathName){
-    const novelId=  GetId(pathName);
-    console.log(pathName);
-    if (!novelId)  return {logo: DQ_LOGO, Approve : true};
-    return await DQGetNovelInfo(novelId);
+    const novelId = GetId(pathName);
+    if (!novelId) return {logo: DQ_LOGO, Approve : true};
+    return {logo: DQ_LOGO, Approve : true, novel: await DQGetNovelInfo(novelId)};
 }
 
 function GetId(pathName){
@@ -19,7 +18,6 @@ function GetId(pathName){
     }
     const regex = /^\/([a-zA-Z0-9\-]+)\/(\d+)\/1\/chuong-(\d+)$/;
     const match = pathName.match(regex);
-    console.log(match);
     if(match) return match[2];
     return null; 
 }
@@ -32,7 +30,6 @@ async function DQGetNovelInfo(id) {
         const response = await request.json();
         const novelInfo = new Novel(
                                     response.id,
-                                    DQ_LOGO,
                                     response.name,
                                     response.storyAuthors.name,
                                     response.countChapter,
@@ -51,19 +48,12 @@ async function DQGetNovelInfo(id) {
 }
 
 
-//Biến /n thành thẻ <p></p>
-function formatDescription(description) {
-    let paragraphs = description.split('\n');
-    let formattedDescription = paragraphs.map(paragraph => {
-        return `<p>${paragraph.replace(/\n/g, ' ')}</p>`;
-    }).join('');
-    return formattedDescription;
-}
+
+
 
 
 async function DaoQuanGetTotalChapters(id){
     try{
-        console.log(`${E5_CHAPTERS_API(id)}`);
     const request = await fetch(`${E5_CHAPTERS_API(id)}`);
     if(request.status !== 200 ) throw new Error("Trang web đang bị lỗi, vui lòng thử lại sau");
         const response = await request.json();
@@ -83,5 +73,14 @@ async function DaoQuanGetChapterContent(ChapterID){
         }
     catch {
         throw new Error("Vui lòng báo cho lập trình viên ở email dưới footer");
+    }
+}
+
+async function DaoQuanAddChapterProcess(novel,ebook){
+    const totalChapter = await DaoQuanGetTotalChapters(novel.id);
+    for (let i = 0; i < totalChapter.length; i++) {
+        const chapterContent = await DaoQuanGetChapterContent(totalChapter[i].id);
+        UpdateProgress(totalChapter[i].number,totalChapter[i].name,i+1,novel.totalChapter);
+        ebook.addChapter(totalChapter[i].number,totalChapter[i].name,chapterContent);
     }
 }

@@ -28,18 +28,18 @@ function fetchToGetNovelInfo(){
     else if(message.Approve)
     {
         SwitchSupportDiv();
-        CURRENT_NOVEL = message;
+        CURRENT_NOVEL = message.novel;
         console.log(message);
         LOGO_WEBSERVICE_IMG.src = message.logo;
-        if(message.title){
-            NOVEL_TITLE.innerText = message.title;
-            TOTAL_CHAPTERS.innerText = message.totalChapter;
-            AUTHOR.innerText = message.author;
-            if (message.availableChapter== message.totalChapter+1){
+        if(message.novel){
+            NOVEL_TITLE.innerText = message.novel.title;
+            TOTAL_CHAPTERS.innerText = message.novel.totalChapter;
+            AUTHOR.innerText = message.novel.author;
+            if (message.novel.availableChapter== message.novel.totalChapter+1){
                 AVAILABLE_CHAPTERS.style.color = 'red'
                 AVAILABLE_CHAPTERS.innerText = '? Đăng nhập';
             }else{
-                AVAILABLE_CHAPTERS.innerText =  message.availableChapter;
+                AVAILABLE_CHAPTERS.innerText =  message.novel.availableChapter;
             }
             changeDisplay(NOVEL_INFO_FRAME);
         }else{

@@ -1,9 +1,9 @@
 importScripts('novel.js');
-const BNS_LOGO = "../img/BachNgocSach.png";
+const BNSVIP_LOGO = "../img/BachNgocSach.png";
 const BNS_API = "https://ngocsach.com/api/"
 const STORY_BY_SLUG = "story-by-slug/";
 const FIVE_NEWEST_CHAPTERS = "/5-chapters-newest";
-const DOMAIN = "bnsvip.com";
+const DOMAIN = "bnsvip.vn";
 const BNS_AUTHENTICATE = `https://${DOMAIN}/api/auth/session`;
 const CHAPTERS_HAVE_TO_BUY = "info-hasnt-bought-chapters/"
 
@@ -11,7 +11,7 @@ const CHAPTERS_HAVE_TO_BUY = "info-hasnt-bought-chapters/"
 //This one like Interface
 async function BNSVIPgetNameAndTotalChapter(pathname){
     let novelSlug = getSlug(pathname);
-    if (novelSlug === null) return {logo: BNS_LOGO,Approve : true}
+    if (novelSlug === null) return {logo: BNSVIP_LOGO,Approve : true}
     const token = await getTokenAccess();
     const dummy = await getNovelInfo(novelSlug,token);
     return dummy;
@@ -28,7 +28,7 @@ async function getNovelInfo(slug,token){
             if(token!==null){
                 chaptersToBuy = await getNumberChaptersHaveToBuy(token,response.id);
             }
-            const novelInfo = new Novel(BNS_LOGO, response.name, response.author.name, response.chapters_count,fiveNewestChapter,chaptersToBuy)
+            const novelInfo = new Novel(BNSVIP_LOGO, response.name, response.author.name, response.chapters_count,fiveNewestChapter,chaptersToBuy)
             return novelInfo;
         }else{
             throw new Error("Cannot get API from server, try it later.");

@@ -1,61 +1,39 @@
-// const WEBSITE_IDENTIFY = {
-//     BACH_NGOC_SACH_VIP : 1
-// }
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === "getBNSinfo") {
+        (async () => {
+            try {
+                const request = await fetch(`https://bnsach.com/reader/node/${message.id}`);
+                const response = await request.text();
+                const parser = new DOMParser();
+                const novelDOM = parser.parseFromString(response, "text/html");
 
-// const SUPPORTED_WEBSITE = {
-//     "bachngocsach.net.vn" : WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP,
-//     "bachngocsach.app": WEBSITE_IDENTIFY.BACH_NGOC_SACH_VIP}
+                const title = novelDOM.getElementById("truyen-title").innerText;     
+                const author = novelDOM.getElementById("tacgia").querySelector('a').innerText;
+                const newestChapterw = novelDOM.getElementById("chuong-list-new").querySelector("span").innerText.slice(7,);
+                const totalChapter = newestChapterw.slice(0, newestChapterw.indexOf(':'));
+                const description = novelDOM.getElementById("gioithieu").querySelector("div").innerHTML;
+                const cover = novelDOM.getElementById("anhbia").querySelector("img").src;
+                const subject = Array.from(novelDOM.getElementById("theloai").querySelectorAll('a')).map(a => a.innerText);
+                
+                const novel = {
+                    id: message.id,
+                    title,
+                    author,
+                    totalChapter,
+                    availableChapter: totalChapter,
+                    cover,
+                    description,
+                    contributor: "Không rõ",
+                    publisher: "bnsach.com",
+                    subject: subject.join(", ")
+                };
+                sendResponse({ status: "success", data: novel });
 
-// let lastUrl = location.href;
-
-// // obsever duty is watching DOM content changing, this one for only BachNgocSach
-// const observer = new MutationObserver(mutations => {
-//     mutations.forEach(mutation => {
-//         if (lastUrl!= location.href) { //When DOM content had changed, will checking url changing.
-//             lastUrl = location.href;
-//             sendToWorker();
-//         }
-//     });
-// });
-    
-// const host = this.location.host;
-
-// function weAreChecking(){
-//     switch(SUPPORTED_WEBSITE[host]){
-//     case 1:
-//         observer.observe(document.body, { childList: true, subtree: true }); // Starting obsever service
-//         sendToWorker();
-//         break;
-//     default:
-//         sendToWorker();
-//         console.log("Not Supported");
-//     }
-// }
-
-// function refeshGetContent(event){
-//     weAreChecking();
-// }
-// refeshGetContent();
-// //This event for Back and Forward for future
-// //window.addEventListener("popstate", refeshGetContent)
-
-// //Send host and pathname to background
-// function sendToWorker(){
-//     console.log(host);
-//     chrome.runtime.sendMessage({ action: "user-action", host: host, content: location.pathname});
-// }
-// Tìm phần tử có id="__NEXT_DATA__"
-// const nextDataElement = document.getElementById("__NEXT_DATA__");
-
-// if (nextDataElement) {
-//     // Lấy nội dung bên trong phần tử
-//     const nextDataContent = nextDataElement.textContent || nextDataElement.innerText;
-    
-//     // Gửi nội dung về background script
-//     chrome.runtime.sendMessage({
-//         action: "PageData",
-//         data: nextDataContent
-//     });
-// } else {
-//     console.log("Không tìm thấy phần tử với id='__NEXT_DATA__'");
-// }
+            } catch (error) {
+                console.error("Error:", error);
+                sendResponse({ status: "error", error: "Không rõ lí do" });
+            }
+        })();
+        return true;
+    }
+});

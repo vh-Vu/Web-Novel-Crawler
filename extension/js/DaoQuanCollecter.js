@@ -35,7 +35,7 @@ async function DQGetNovelInfo(id) {
                                     response.countChapter,
                                     0,
                                     `https://img.daoquan.vn/get/images/doctruyen/${response.images.file}`,
-                                    formatDescription(response.description),
+                                    formatParagraph(response.description),
                                     response.usersCreator.fullname,
                                     DQDOMAIN,
                                     `${response.storyCategoriesParent.name}, ${response.storyTypes.name}, ${response.storyCategories[0].name}`

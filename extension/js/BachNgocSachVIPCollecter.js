@@ -40,6 +40,7 @@ async function getNovelInfo(slug,token){
                                         response.categories.map((index)=> index.name).join(', ')
                                         );
             novelInfo.slug = slug;
+            novelInfo.token = token;
             return novelInfo;
         }else{
             throw new Error("Cannot get API from server, try it later.");
@@ -149,37 +150,60 @@ function getSlug(pathName,storyPath = "/truyen/"){
 }
 
 async function BNSVIPAddChapterProcess(novel,ebook){
-    const request = await fetch(`https://ngocsach.com/api/get-chapter-by-order-number/${novel.slug}/1`);
-    const response = await request.json();
-    response.chapter_number;response.name
-    const chapter = [];
-    chapter.push(formatDescription(response.public_content));
-    const content = decryptAES(atob(response.encrypted.wdata),SECRET_KEY_BNS).replace(/\\n/g, '').replace(/\\\\/g, '');
-    const sdata = decryptAES(atob(response.encrypted.sdata),SECRET_KEY_BNS);
-    formatParagraph(content,sdata)
-    
-    //https://ngocsach.com/api/get-chapter-by-order-number/nhat-niem-vinh-hang/575
-    //"tu-tien-khi-nguoi-lam-mot-viec-den-cuc-han"
+    const headers = novel.token ? {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${novel.token}`}: {};
 
+    for(let i = 0; i<novel.totalChapter;i++){
+        const request = await fetch(`https://ngocsach.com/api/get-chapter-by-order-number/${novel.slug}/${i+1}`, {
+            method: 'GET',
+            headers: headers
+        });
+        const response = await request.json();
+        chrome.runtime.sendMessage({
+            action: "updateProgress",
+            message: `Vui lòng giữ cửa sổ hiện tại\nĐang thử tải ${response.name}`,
+            progress: (response.chapter_number / novel.totalChapter) * 100
+        });
+        if(response.encrypted){
+            ebook.addChapter(response.chapter_number,response.name,await 
+                decryptData(
+                            response.public_content,
+                            response.encrypted.wdata,
+                            response.encrypted.sdata
+                            ))
+        }
+    }
 }
 
-function formatParagraph(content,sdata){
-    let firstWordSelectorIndex = 0;
-    let regex = /([a-zA-Z0-9]+)\{order:(\d+)\}/g;
+async function decryptData(unEnContent,encryptedData,encryptedOrder){
+    const content = decryptAES(atob(encryptedData),SECRET_KEY_BNS);
+    const order = decryptAES(atob(encryptedOrder),SECRET_KEY_BNS);
+    const map = await BNSVIPparseAndFormatContent(content,order);
+    return formatParagraph(unEnContent)+map.map(item => `<p>${item}</p>`).join('');
+}
+
+function BNSVIPparseAndFormatContent(content,sdata){
+    const regex = /([a-zA-Z0-9]+)\{order:(\d+)\}/g;
     let matches = [];
     let match;
     let record = true;
+    let firstWordSelectorIndex = 0;
     while ((match = regex.exec(sdata)) !== null) {
         if(match[2] == 0) record =false;
         if(record) firstWordSelectorIndex++;
         matches.push({ value: match[1], order: match[2] });
     }
-    chrome.runtime.sendMessage({ action: "parser", content, firstWordSelectorIndex,matches }, (response) => {
-        if (response && response.status === "success") {
-            console.log("Download started successfully!");
-        } else {
-            console.error("Error:", response.error);
-            alert("Có lỗi xảy ra khi tải xuống!");
-        }
+    const noEnter = content.replace(/\\n/g, '');
+    const cleanContent = noEnter.replace(/\\/g, '');
+    return new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage({ action: "parser", cleanContent, matches, firstWordSelectorIndex}, (response) => {
+            if (response.status === "success") {
+                resolve(response.data);
+            } else {
+                reject("Có lỗi xảy ra khi tải xuống!"); 
+            }
+        });
     });
 }

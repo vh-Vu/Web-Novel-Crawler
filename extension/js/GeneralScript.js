@@ -28,12 +28,12 @@ function removeVietnameseTones_and_SpecialCharacter(str) {
 
 
 //Transform /n to p tag <p></p>
-function formatDescription(description) {
+function formatParagraph(description) {
     let paragraphs = description.split('\n');
-    let formattedDescription = paragraphs.map(paragraph => {
+    let formatParagraph = paragraphs.map(paragraph => {
         return `<p>${paragraph.replace(/\n/g, ' ')}</p>`;
     }).join('');
-    return formattedDescription;
+    return formatParagraph;
 }
 
 function UpdateProgress(number,title,current,total){
@@ -47,17 +47,11 @@ function UpdateProgress(number,title,current,total){
 function decryptAES(base64Input, keyInput) {
     const encryptedData = CryptoJS.enc.Base64.parse(base64Input);
     const key = CryptoJS.enc.Utf8.parse(keyInput);
-    
-    // Giải mã dữ liệu với AES-256 trong chế độ ECB
-    const decrypted = CryptoJS.AES.decrypt(
+        const decrypted = CryptoJS.AES.decrypt(
         { ciphertext: encryptedData },
         key,
         { mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 }
     );
-    
-    // Chuyển kết quả giải mã về chuỗi UTF-8
     const decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
-    
-    // In kết quả ra console
     return decryptedText;
 }

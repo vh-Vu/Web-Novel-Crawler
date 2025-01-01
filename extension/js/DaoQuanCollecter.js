@@ -69,7 +69,7 @@ async function DaoQuanGetChapterContent(ChapterID){
         const request = await fetch(`${DQ_API}storyChapters/${ChapterID}`);
         if(request.status !== 200 ) throw new Error("Trang web đang bị lỗi, vui lòng thử lại sau");
             const response = await request.json();
-            return formatDescription(response.content);
+            return formatParagraph(response.content);
         }
     catch {
         throw new Error("Vui lòng báo cho lập trình viên ở email dưới footer");

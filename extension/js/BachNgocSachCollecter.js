@@ -73,7 +73,6 @@ async function getChapterContents(chapterID) {
 
 async function decryptContent(a) {
     const encryptedContent = a.trim();
-
     try {
         const response = await fetch('https://bnsach.com/reader/api/decrypt-content.php', {
             method: 'POST',

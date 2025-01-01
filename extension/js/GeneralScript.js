@@ -1,3 +1,5 @@
+const SECRET_KEY_BNS = "bns16char_long_k"
+
 function removeVietnameseTones_and_SpecialCharacter(str) {
     const map = {
         'a': /[àáạảãâầấậẩẫăằắặẳẵ]/g,
@@ -40,4 +42,22 @@ function UpdateProgress(number,title,current,total){
         message: `Đang tải Chương ${number}: ${title}`,
         progress: (current / total) * 100
     });
+}
+
+function decryptAES(base64Input, keyInput) {
+    const encryptedData = CryptoJS.enc.Base64.parse(base64Input);
+    const key = CryptoJS.enc.Utf8.parse(keyInput);
+    
+    // Giải mã dữ liệu với AES-256 trong chế độ ECB
+    const decrypted = CryptoJS.AES.decrypt(
+        { ciphertext: encryptedData },
+        key,
+        { mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 }
+    );
+    
+    // Chuyển kết quả giải mã về chuỗi UTF-8
+    const decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
+    
+    // In kết quả ra console
+    return decryptedText;
 }

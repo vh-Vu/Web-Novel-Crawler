@@ -56,7 +56,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                     if(Approve(host)){
                         switch(SUPPORTED_WEBSITE[host]){
                             case 1:
-                                sendResponse(await BNSVIPgetNameAndTotalChapter(pathName));
+                                sendResponse(await BNSVIPgetNovelInfo(pathName));
                                 break;
                             case 2:
                                 sendResponse(await DaoQuangetNameAndTotalChapter(pathName));
@@ -127,9 +127,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 console.log(message.novel)
                 await startDownload(message.novel);
 
-                chrome.windows.remove(downloadWindow.id, () => {
-                    console.log("Download window closed.");
-                });
+                // chrome.windows.remove(downloadWindow.id, () => {
+                //     console.log("Download window closed.");
+                // });
                 sendResponse({ status: "success" });
             } catch (error) {
                 console.error("Error during file download creation:", error);
@@ -165,6 +165,9 @@ async function startDownload(novel) {
     let ebook = new Ebook(novel.title,novel.cover,novel.author,novel.publisher,novel.contributor,novel.subject,novel.description)
     // Thêm các chương vào 
     switch(SUPPORTED_WEBSITE[novel.publisher]){
+        case 1:
+            await BNSVIPAddChapterProcess(novel,ebook);
+            break;
         case 2:
             await DaoQuanAddChapterProcess(novel,ebook);
             break;
@@ -179,12 +182,12 @@ async function startDownload(novel) {
         progress: 100
     });
     const dataURL = await ebook.genBook();
-    chrome.downloads.download({
-        url: dataURL,
-        filename: `${removeVietnameseTones_and_SpecialCharacter(novel.title)}-${removeVietnameseTones_and_SpecialCharacter(novel.author)}_Web-Novel-Crawler.zip`,
-        saveAs: true
-    }, (downloadId) => {
-        console.log("Download started with ID:", downloadId);
-    });
+    // chrome.downloads.download({
+    //     url: dataURL,
+    //     filename: `${removeVietnameseTones_and_SpecialCharacter(novel.title)}-${removeVietnameseTones_and_SpecialCharacter(novel.author)}_Web-Novel-Crawler.zip`,
+    //     saveAs: true
+    // }, (downloadId) => {
+    //     console.log("Download started with ID:", downloadId);
+    // });
 }
 

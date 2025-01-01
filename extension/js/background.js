@@ -9,6 +9,7 @@ let SUPPORTED_WEBSITE;
 
 let configLoaded = false;
 let isDownload = false;
+let downloadWindowId = null;
 
 async function loadConfig() {
     try {
@@ -124,12 +125,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             try {
                 isDownload = true;
                 const downloadWindow = await createDownloadWindow();
-                console.log(message.novel)
                 await startDownload(message.novel);
-
-                // chrome.windows.remove(downloadWindow.id, () => {
-                //     console.log("Download window closed.");
-                // });
+                chrome.windows.remove(downloadWindow.id, () => {
+                    console.log("Download window closed.");
+                });
                 sendResponse({ status: "success" });
             } catch (error) {
                 console.error("Error during file download creation:", error);
@@ -155,6 +154,7 @@ async function createDownloadWindow() {
             if (chrome.runtime.lastError) {
                 reject(new Error('Failed to create download window'));
             } else {    
+                downloadWindowId = window.id;
                 resolve(window);
             }
         });
@@ -162,6 +162,10 @@ async function createDownloadWindow() {
 }
 
 async function startDownload(novel) {
+    if (!isDownload) {
+        console.log("Download process was stopped after adding chapters.");
+        return;
+    }
     let ebook = new Ebook(novel.title,novel.cover,novel.author,novel.publisher,novel.contributor,novel.subject,novel.description)
     // Thêm các chương vào 
     switch(SUPPORTED_WEBSITE[novel.publisher]){
@@ -175,19 +179,33 @@ async function startDownload(novel) {
             await BNSAddChapterProcess(novel,ebook);
             break;
     }
-
+    if (!isDownload) {
+        console.log("Download process was stopped after adding chapters.");
+        return;
+    }
     chrome.runtime.sendMessage({
         action: "updateProgress",
         message: `Đang tạo sách`,
         progress: 100
     });
-    const dataURL = await ebook.genBook();
-    // chrome.downloads.download({
-    //     url: dataURL,
-    //     filename: `${removeVietnameseTones_and_SpecialCharacter(novel.title)}-${removeVietnameseTones_and_SpecialCharacter(novel.author)}_Web-Novel-Crawler.zip`,
-    //     saveAs: true
-    // }, (downloadId) => {
-    //     console.log("Download started with ID:", downloadId);
-    // });
+    let dataURL;
+    if(SUPPORTED_WEBSITE[novel.publisher] == 1){
+        dataURL = await ebook.genBook(BNSVIPchapterTemplate);
+    }else{
+        dataURL = await ebook.genBook();
+    }
+    chrome.downloads.download({
+        url: dataURL,
+        filename: `${removeVietnameseTones_and_SpecialCharacter(novel.title)}-${removeVietnameseTones_and_SpecialCharacter(novel.author)}_Web-Novel-Crawler.zip`,
+        saveAs: true
+    }, (downloadId) => {
+        console.log("Download started with ID:", downloadId);
+    });
 }
 
+chrome.windows.onRemoved.addListener((windowId) => {
+    if (windowId === downloadWindowId) {
+        console.log("Download window was closed.");
+        isDownload = false;
+    }
+});

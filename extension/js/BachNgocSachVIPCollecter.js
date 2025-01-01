@@ -1,4 +1,6 @@
 importScripts('novel.js');
+importScripts('../lib/crypto-js.min.js');
+
 const BNSVIP_LOGO = "../img/BachNgocSach.png";
 const BNS_API = "https://ngocsach.com/api/"
 const STORY_BY_SLUG = "story-by-slug/";
@@ -9,12 +11,11 @@ const CHAPTERS_HAVE_TO_BUY = "info-hasnt-bought-chapters/"
 
 
 //This one like Interface
-async function BNSVIPgetNameAndTotalChapter(pathname){
+async function BNSVIPgetNovelInfo(pathname){
     let novelSlug = getSlug(pathname);
     if (novelSlug === null) return {logo: BNSVIP_LOGO,Approve : true}
     const token = await getTokenAccess();
-    const dummy = await getNovelInfo(novelSlug,token);
-    return dummy;
+    return {logo: BNSVIP_LOGO,Approve : true, novel: await getNovelInfo(novelSlug,token)} ;
 }
 
 
@@ -23,12 +24,22 @@ async function getNovelInfo(slug,token){
         const request = await fetch(`${BNS_API}${STORY_BY_SLUG}${slug}`);
         let response = await request.json();
         if(request.status===200 && response.id){
-            const fiveNewestChapter = await getFiveNewestChapters(response.id)
             let chaptersToBuy = -1;
             if(token!==null){
                 chaptersToBuy = await getNumberChaptersHaveToBuy(token,response.id);
             }
-            const novelInfo = new Novel(BNSVIP_LOGO, response.name, response.author.name, response.chapters_count,fiveNewestChapter,chaptersToBuy)
+            const novelInfo = new Novel(response.id, 
+                                        response.name,  
+                                        response.author.name, 
+                                        response.chapters_count, 
+                                        chaptersToBuy, 
+                                        response.cover_original,
+                                        response.desc,
+                                        response.contributors.map((index)=> index.name).join(', '),
+                                        DOMAIN,
+                                        response.categories.map((index)=> index.name).join(', ')
+                                        );
+            novelInfo.slug = slug;
             return novelInfo;
         }else{
             throw new Error("Cannot get API from server, try it later.");
@@ -137,3 +148,38 @@ function getSlug(pathName,storyPath = "/truyen/"){
     return  (indexOfForwardSlash === -1) ? novelPath : novelPath.slice(0,indexOfForwardSlash);
 }
 
+async function BNSVIPAddChapterProcess(novel,ebook){
+    const request = await fetch(`https://ngocsach.com/api/get-chapter-by-order-number/${novel.slug}/1`);
+    const response = await request.json();
+    response.chapter_number;response.name
+    const chapter = [];
+    chapter.push(formatDescription(response.public_content));
+    const content = decryptAES(atob(response.encrypted.wdata),SECRET_KEY_BNS).replace(/\\n/g, '').replace(/\\\\/g, '');
+    const sdata = decryptAES(atob(response.encrypted.sdata),SECRET_KEY_BNS);
+    formatParagraph(content,sdata)
+    
+    //https://ngocsach.com/api/get-chapter-by-order-number/nhat-niem-vinh-hang/575
+    //"tu-tien-khi-nguoi-lam-mot-viec-den-cuc-han"
+
+}
+
+function formatParagraph(content,sdata){
+    let firstWordSelectorIndex = 0;
+    let regex = /([a-zA-Z0-9]+)\{order:(\d+)\}/g;
+    let matches = [];
+    let match;
+    let record = true;
+    while ((match = regex.exec(sdata)) !== null) {
+        if(match[2] == 0) record =false;
+        if(record) firstWordSelectorIndex++;
+        matches.push({ value: match[1], order: match[2] });
+    }
+    chrome.runtime.sendMessage({ action: "parser", content, firstWordSelectorIndex,matches }, (response) => {
+        if (response && response.status === "success") {
+            console.log("Download started successfully!");
+        } else {
+            console.error("Error:", response.error);
+            alert("Có lỗi xảy ra khi tải xuống!");
+        }
+    });
+}

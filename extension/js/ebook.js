@@ -2,6 +2,8 @@ importScripts('../lib/jszip.min.js');
 
 
 const chapterTemplate=(no,title,content)=>`<?xml version='1.0' encoding='utf-8'?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="vi" xml:lang="vi"><head></head><body><h1>Chương ${no}: ${title}</h1>${content}</body></html>`
+const BNSVIPchapterTemplate=(no,title,content)=>`<?xml version='1.0' encoding='utf-8'?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="vi" xml:lang="vi"><head></head><body><h1>${title}</h1>${content}</body></html>`
+
 function createMetaData(title,author,publisher,contributor,totalChapter,subject,description,manifestItems,spineItems){let date = () => {const today = new Date();const year = today.getFullYear();const month = String(today.getMonth() + 1).padStart(2, '0');const day = String(today.getDate()).padStart(2, '0');return `${year}-${month}-${day}`;}
 return (`<?xml version="1.0" encoding="UTF-8"?><package xmlns="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.idpf.org/2007/opf http://www.idpf.org/2007/opf/schema/opf2.xsd" version="2.0"><metadata><dc:title lang="vi">${title}</dc:title><dc:creator>${author}</dc:creator><dc:language>vi</dc:language><dc:description><![CDATA[<div><p>Dịch giả: ${contributor}</p><p>Phát hành: ${publisher}</p><p>Ứng dụng tạo ebook: <a href="https://github.com/vh-Vu/Web-Novel-Crawler"><strong style="color: #6cb4ee">Web Novel Crawler</strong></a></p><p>Tổng số chương: ${totalChapter}</p><div>${description}</div></div>]]></dc:description><dc:publisher>${publisher}</dc:publisher><dc:contributor>${contributor}</dc:contributor><dc:date>${date()}</dc:date><dc:subject>${subject}</dc:subject><meta name="cover" content="cover"/></metadata><manifest><item href="CoverPage.xhtml" id="Coverpage" media-type="application/xhtml+xml"/><item href="toc.ncx" id="ncx" media-type="application/x-dtbncx+xml"/><item href="cover.jpg" id="cover" media-type="image/jpeg"/><item id="id3" href="cover.jpg" media-type="image/jpeg"/>${manifestItems.join('')}</manifest><spine toc="ncx"><itemref idref="Coverpage" />${spineItems.join('')}</spine><guide><reference href="CoverPage.xhtml" type="cover"/></guide></package>`)}
 const tableOfContents=(title,author,tocOrder)=>`<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE ncx PUBLIC "-//NISO//DTD ncx 2005-1//EN" "http://www.niso.org/dtds/2005/ncx-2005-1.dtd"><ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1"><head><meta name="dtb:uid" content="12345"/><meta name="dtb:depth" content="1"/><meta name="dtb:totalPageCount" content="0"/><meta name="dtb:maxPageNumber" content="0"/></head><docTitle><text>${title}</text></docTitle><docAuthor><text>${author}</text></docAuthor><navMap>${tocOrder.join("")}</navMap></ncx>`;
@@ -31,14 +33,14 @@ class Ebook{
         this.chapterContents.push(contents);
         this.totalChapters++;
     }
-    async genBook(){
+    async genBook(template = chapterTemplate){
         const zip = new JSZip();
         zip.file("cover.jpg", await fetch(this.cover).then(res => res.blob()));
         zip.file("META-INF/container.xml", container);
         zip.file("CoverPage.xhtml", CoverPage);
         zip.file("mimetype", "application/epub+zip");
         for(let i = 0; i<this.totalChapters;i++){
-            const {filePath, contents} = this.makeChapter(i);
+            const {filePath, contents} = this.makeChapter(i,template);
             zip.file(filePath,contents);
         }
         zip.file("metadata.opf",this.makeMetaData());
@@ -46,13 +48,13 @@ class Ebook{
         const zipContent = await zip.generateAsync({ type: "base64" });
         return `data:application/epub+zip;base64,${zipContent}`;
     }
-    makeChapter(index){
+    makeChapter(index,template){
         const ChapterID = this.ChaptersNuberic[index].toString().padStart(4, '0');
         const filePath =`OEBPS/contents/chapter${ChapterID}.xhtml`;
         this.manifestItems.push(`<item id="${ChapterID}" href="${filePath}" media-type="application/xhtml+xml" />`);
         this.spineItems.push(`<itemref idref="${ChapterID}" />`);
         this.filePaths.push(filePath);
-        return {filePath:filePath, contents: chapterTemplate(this.ChaptersNuberic[index],this.chapters[index], this.chapterContents[index])};
+        return {filePath:filePath, contents: template(this.ChaptersNuberic[index],this.chapters[index], this.chapterContents[index])};
     }
 
     makeMetaData(){

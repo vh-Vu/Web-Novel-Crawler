@@ -15,29 +15,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "parser") {
         const parser = new DOMParser();
-        let a = message.content.replace(/\\n/g, '');
-        let b = a.replace(/\\/g, '');
-        const content = parser.parseFromString(b,"text/html");
+        const content = parser.parseFromString(message.cleanContent,"text/html");
         let index = message.firstWordSelectorIndex;
         let totalWord = message.matches.length;
         const response = [];
         const matches = message.matches;
-        console.log(matches)
-
         while(message.firstWordSelectorIndex-->0){
             const paragraphWord = [];
             paragraphWord.push(convertToUnicode(content.querySelector(matches[index++].value).innerText));
-            // console.log(matches[index]);
-
-            // console.log(matches[index].order);
             while(index<totalWord && parseInt( matches[index].order)>0){
                 paragraphWord.push(convertToUnicode(content.querySelector(matches[index++].value).innerText));
             }
             response.push(paragraphWord.join(''));
        }
-       console.log(index);
-        console.log(response.join('\n'));
-        sendResponse({ status: "success" });
+        sendResponse({ status: "success", data: response });
     }
 });
 

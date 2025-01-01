@@ -29,3 +29,5 @@
 - Dec-30-24 (30-12-24), Tiến hành tích hợp thêm trang bnsach.com.
 
 - Dec-31-24 (31-12-24), Tích hợp tạm gọi là thành công, tuy nhiên chưa bao giờ thấy một website nào bừa bộn thế này. Vào lúc này có thể tạm sử dụng được ở trang chính và truyện. Tương lai có thể trang này sẽ quy hoạch lại, nói chung rất là hổ lốn :D
+
+- Jan-1-25 (1-1-25), Tốc độ tích hợp ngày càng nhanh. Đã giải mã được trang BNSVIP. Có thể down các chap đã mua. Tạm thời phần mềm đã có thể sử dụng mục đích. Tốc độ phát triển sẽ chậm lại để có thể test, và đánh giá.

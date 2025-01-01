@@ -35,7 +35,7 @@ async function DQGetNovelInfo(id) {
                                     response.countChapter,
                                     0,
                                     `https://img.daoquan.vn/get/images/doctruyen/${response.images.file}`,
-                                    formatDescription(response.description),
+                                    formatParagraph(response.description),
                                     response.usersCreator.fullname,
                                     DQDOMAIN,
                                     `${response.storyCategoriesParent.name}, ${response.storyTypes.name}, ${response.storyCategories[0].name}`
@@ -69,7 +69,7 @@ async function DaoQuanGetChapterContent(ChapterID){
         const request = await fetch(`${DQ_API}storyChapters/${ChapterID}`);
         if(request.status !== 200 ) throw new Error("Trang web đang bị lỗi, vui lòng thử lại sau");
             const response = await request.json();
-            return formatDescription(response.content);
+            return formatParagraph(response.content);
         }
     catch {
         throw new Error("Vui lòng báo cho lập trình viên ở email dưới footer");

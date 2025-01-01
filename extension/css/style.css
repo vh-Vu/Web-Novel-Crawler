@@ -258,3 +258,7 @@ footer{
 #not-supported, #supported{
     display: none;
 }
+
+#donate{
+    text-decoration: none;
+}

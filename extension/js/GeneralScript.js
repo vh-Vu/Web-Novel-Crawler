@@ -1,3 +1,5 @@
+const SECRET_KEY_BNS = "bns16char_long_k"
+
 function removeVietnameseTones_and_SpecialCharacter(str) {
     const map = {
         'a': /[àáạảãâầấậẩẫăằắặẳẵ]/g,
@@ -26,12 +28,12 @@ function removeVietnameseTones_and_SpecialCharacter(str) {
 
 
 //Transform /n to p tag <p></p>
-function formatDescription(description) {
+function formatParagraph(description) {
     let paragraphs = description.split('\n');
-    let formattedDescription = paragraphs.map(paragraph => {
+    let formatParagraph = paragraphs.map(paragraph => {
         return `<p>${paragraph.replace(/\n/g, ' ')}</p>`;
     }).join('');
-    return formattedDescription;
+    return formatParagraph;
 }
 
 function UpdateProgress(number,title,current,total){
@@ -40,4 +42,16 @@ function UpdateProgress(number,title,current,total){
         message: `Đang tải Chương ${number}: ${title}`,
         progress: (current / total) * 100
     });
+}
+
+function decryptAES(base64Input, keyInput) {
+    const encryptedData = CryptoJS.enc.Base64.parse(base64Input);
+    const key = CryptoJS.enc.Utf8.parse(keyInput);
+        const decrypted = CryptoJS.AES.decrypt(
+        { ciphertext: encryptedData },
+        key,
+        { mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 }
+    );
+    const decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
+    return decryptedText;
 }

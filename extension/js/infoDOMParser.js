@@ -1,3 +1,4 @@
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "getBNSinfo") {
         (async () => {
@@ -11,8 +12,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 const author = novelDOM.getElementById("tacgia").querySelector('a').innerText;
                 const linkTag = novelDOM.querySelectorAll("link");
                 let totalChapter = 0;
+                const href = novelDOM.querySelector("link").href
+
+
                 //go to TOC page to get all contents
-                for (link of linkTag){
+                for (let link of linkTag){
                     if(link.rel == "canonical"){
                         const rquest = await fetch(`${link.href}/muc-luc?page=all`);
                         const rsponse = await rquest.text();
@@ -30,6 +34,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                     const regex = /node\/(\d+)/;
                     return firstChapterResponse.match(regex)[1];
                 };
+                const firstChapterNode =await firstChapter(`https://bnsach.com${href.slice(href.indexOf('/reader'),)}`);
                 const novel = {
                     id: message.id,
                     title,
@@ -41,7 +46,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                     contributor: "Không rõ",
                     publisher: "bnsach.com",
                     subject: subject.join(", "),
-                    firstChapterNode: await firstChapter(novelDOM.querySelector("link").href)
+                    firstChapterNode,
                 };
                 sendResponse({ status: "success", data: novel });
 

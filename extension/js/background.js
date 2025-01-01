@@ -9,6 +9,7 @@ let SUPPORTED_WEBSITE;
 
 let configLoaded = false;
 let isDownload = false;
+let downloadWindowId = null;
 
 async function loadConfig() {
     try {
@@ -56,7 +57,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                     if(Approve(host)){
                         switch(SUPPORTED_WEBSITE[host]){
                             case 1:
-                                sendResponse(await BNSVIPgetNameAndTotalChapter(pathName));
+                                sendResponse(await BNSVIPgetNovelInfo(pathName));
                                 break;
                             case 2:
                                 sendResponse(await DaoQuangetNameAndTotalChapter(pathName));
@@ -124,9 +125,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             try {
                 isDownload = true;
                 const downloadWindow = await createDownloadWindow();
-                console.log(message.novel)
                 await startDownload(message.novel);
-
                 chrome.windows.remove(downloadWindow.id, () => {
                     console.log("Download window closed.");
                 });
@@ -155,6 +154,7 @@ async function createDownloadWindow() {
             if (chrome.runtime.lastError) {
                 reject(new Error('Failed to create download window'));
             } else {    
+                downloadWindowId = window.id;
                 resolve(window);
             }
         });
@@ -162,9 +162,16 @@ async function createDownloadWindow() {
 }
 
 async function startDownload(novel) {
+    if (!isDownload) {
+        console.log("Download process was stopped after adding chapters.");
+        return;
+    }
     let ebook = new Ebook(novel.title,novel.cover,novel.author,novel.publisher,novel.contributor,novel.subject,novel.description)
     // Thêm các chương vào 
     switch(SUPPORTED_WEBSITE[novel.publisher]){
+        case 1:
+            await BNSVIPAddChapterProcess(novel,ebook);
+            break;
         case 2:
             await DaoQuanAddChapterProcess(novel,ebook);
             break;
@@ -172,13 +179,21 @@ async function startDownload(novel) {
             await BNSAddChapterProcess(novel,ebook);
             break;
     }
-
+    if (!isDownload) {
+        console.log("Download process was stopped after adding chapters.");
+        return;
+    }
     chrome.runtime.sendMessage({
         action: "updateProgress",
         message: `Đang tạo sách`,
         progress: 100
     });
-    const dataURL = await ebook.genBook();
+    let dataURL;
+    if(SUPPORTED_WEBSITE[novel.publisher] == 1){
+        dataURL = await ebook.genBook(BNSVIPchapterTemplate);
+    }else{
+        dataURL = await ebook.genBook();
+    }
     chrome.downloads.download({
         url: dataURL,
         filename: `${removeVietnameseTones_and_SpecialCharacter(novel.title)}-${removeVietnameseTones_and_SpecialCharacter(novel.author)}_Web-Novel-Crawler.zip`,
@@ -188,3 +203,9 @@ async function startDownload(novel) {
     });
 }
 
+chrome.windows.onRemoved.addListener((windowId) => {
+    if (windowId === downloadWindowId) {
+        console.log("Download window was closed.");
+        isDownload = false;
+    }
+});
